@@ -97,6 +97,7 @@ extern "C"
 	} RTCTamper_t;
 	// Functions defined in "system_rtc_l0.c"
 	void rtc_initLsi(bool resetBKP);
+	void rtc_initLse(bool resetBKP);
 	void rtc_setTime(uint8_t hour, uint8_t min, uint8_t sec);
 	void rtc_setDate(uint8_t weekday, uint8_t day, uint8_t month, uint8_t year);
 	void rtc_setUnix(uint32_t unix);
