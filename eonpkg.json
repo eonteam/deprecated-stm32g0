@@ -1,0 +1,19 @@
+{
+    "name": "stm32g0",
+    "author": "Eon Team",
+    "type": "platform",
+    "version": "1.0.0",
+    "mcpu": "cortex-m0plus",
+    "script": "stm32_m0plus",
+    "compiler": "arm-none-eabi",
+    "programmer": "stcubeprog",
+    "modules": [
+        "gpio",
+        "uart1",
+        "uart2"
+    ],
+    "targets": [{
+        "name": "stm32g070rb",
+        "variant": "STM32g070xx"
+    }]
+}
