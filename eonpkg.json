@@ -14,6 +14,6 @@
     ],
     "targets": [{
         "name": "stm32g070rb",
-        "variant": "STM32g070xx"
+        "variant": "STM32G070xx"
     }]
 }
