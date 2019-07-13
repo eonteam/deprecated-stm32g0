@@ -352,7 +352,7 @@ void rtc_setAlarmAAfter(uint32_t seconds)
 	LL_RTC_DisableWriteProtection(RTC);
 	LL_RTC_ALMA_Enable(RTC);
 	LL_RTC_EnableIT_ALRA(RTC);
-	LL_EXTI_EnableIT_0_31(RTC_EXTI_LINE_ALARM);
+	LL_EXTI_EnableIT_0_31(RTC_EXTI_LINE);
 	LL_RTC_EnableWriteProtection(RTC);
 }
 
@@ -392,7 +392,7 @@ void rtc_setAlarmBAfter(uint32_t seconds)
 	LL_RTC_DisableWriteProtection(RTC);
 	LL_RTC_ALMB_Enable(RTC);
 	LL_RTC_EnableIT_ALRB(RTC);
-	LL_EXTI_EnableIT_0_31(RTC_EXTI_LINE_ALARM);
+	LL_EXTI_EnableIT_0_31(RTC_EXTI_LINE);
 	LL_RTC_EnableWriteProtection(RTC);
 }
 
