@@ -55,7 +55,7 @@ void uart2_init(uint32_t baudrate, pin_t tx, pin_t rx)
 	NVIC_EnableIRQ(USART2_IRQn);
 
 	USART_InitStruct.PrescalerValue = LL_USART_PRESCALER_DIV1;
-  USART_InitStruct.BaudRate = baurate;
+  USART_InitStruct.BaudRate = baudrate;
   USART_InitStruct.DataWidth = LL_USART_DATAWIDTH_8B;
   USART_InitStruct.StopBits = LL_USART_STOPBITS_1;
   USART_InitStruct.Parity = LL_USART_PARITY_NONE;
