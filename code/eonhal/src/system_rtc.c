@@ -73,14 +73,11 @@ __STATIC_INLINE void LSI_init(bool resetBKP)
 
 __STATIC_INLINE void LSE_init(bool resetBKP)
 {
-	LL_RCC_LSE_SetDriveCapability(LL_RCC_LSEDRIVE_LOW);
   LL_RCC_LSE_Enable();
 
 	while(LL_RCC_LSE_IsReady() != 1)
   {
   };
-
-  LL_RCC_LSE_EnableCSS();
 
 	LL_PWR_EnableBkUpAccess();
 
