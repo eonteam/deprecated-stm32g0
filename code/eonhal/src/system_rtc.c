@@ -560,7 +560,7 @@ __weak void __Handler_RTC_TAMPER3(void)
 void __Handler_RTC_TAMPER3(void) __attribute__((weak));
 #endif
 
-void RTC_IRQHandler(void)
+void RTC_TAMP_IRQHandler(void)
 {
 
 	if (LL_RTC_IsActiveFlag_WUT(RTC) != RESET)
