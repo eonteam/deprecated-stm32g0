@@ -66,7 +66,7 @@ void system_sleepLPSeconds(uint32_t seconds)
 {
 	LL_FLASH_DisablePrefetch();
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
-	LL_FLASH_EnableSleepPowerDown();
+	LL_PWR_EnableFlashPowerDownInLPSleep();
 	LL_RCC_DeInit();
 	CLOCK_HSI_2MHZ();
 	__disable_irq();
@@ -78,6 +78,7 @@ void system_sleepLPSeconds(uint32_t seconds)
 	__WFI();
 	// Exitting low power modes
 	LL_PWR_DisableLowPowerRunMode();
+	LL_PWR_DisableFlashPowerDownInLPSleep();
 	while (LL_PWR_IsEnabledLowPowerRunMode() == 1)
 		;
 	LL_RCC_DeInit();
@@ -90,7 +91,7 @@ void system_sleepLPMillis(uint32_t milliseconds)
 {
 	LL_FLASH_DisablePrefetch();
 	LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_PWR);
-	LL_FLASH_EnableSleepPowerDown();
+	LL_PWR_EnableFlashPowerDownInLPSleep();
 	LL_RCC_DeInit();
 	CLOCK_HSI_2MHZ();
 	__disable_irq();
@@ -102,6 +103,7 @@ void system_sleepLPMillis(uint32_t milliseconds)
 	__WFI();
 	// Exitting low power modes
 	LL_PWR_DisableLowPowerRunMode();
+	LL_PWR_DisableFlashPowerDownInLPSleep();
 	while (LL_PWR_IsEnabledLowPowerRunMode() == 1)
 		;
 	LL_RCC_DeInit();

@@ -197,14 +197,14 @@ void rtc_setWKUPMillis(uint16_t milliseconds)
 	LL_RTC_WAKEUP_Disable(RTC);												 //ok
 	LL_RTC_DisableIT_WUT(RTC);
 
-	NVIC_SetPriority(RTC_IRQn, RTC_PRIORITY);
-	NVIC_DisableIRQ(RTC_IRQn);
+	NVIC_SetPriority(RTC_TAMP_IRQn, RTC_PRIORITY);
+	NVIC_DisableIRQ(RTC_TAMP_IRQn);
 
 	LL_EXTI_DisableIT_0_31(RTC_EXTI_LINE);
 
 	if (milliseconds != 0)
 	{
-		NVIC_EnableIRQ(RTC_IRQn);
+		NVIC_EnableIRQ(RTC_TAMP_IRQn);
 		ms_fix = (uint16_t)(((float)2.048 * milliseconds) - 1); // 2048 = 32768 / 16
 		RTC_setWAKEUPTIMER(ms_fix, LL_RTC_WAKEUPCLOCK_DIV_16);
 	}
@@ -216,14 +216,14 @@ void rtc_setWKUPSeconds(uint16_t seconds)
 	LL_RTC_WAKEUP_Disable(RTC);												 //ok
 	LL_RTC_DisableIT_WUT(RTC);
 
-	NVIC_SetPriority(RTC_IRQn, RTC_PRIORITY);
-	NVIC_DisableIRQ(RTC_IRQn);
+	NVIC_SetPriority(RTC_TAMP_IRQn, RTC_PRIORITY);
+	NVIC_DisableIRQ(RTC_TAMP_IRQn);
 
 	LL_EXTI_DisableIT_0_31(RTC_EXTI_LINE);
 
 	if (seconds != 0)
 	{
-		NVIC_EnableIRQ(RTC_IRQn);
+		NVIC_EnableIRQ(RTC_TAMP_IRQn);
 		RTC_setWAKEUPTIMER((seconds - 1), LL_RTC_WAKEUPCLOCK_CKSPRE);
 	}
 }
@@ -239,8 +239,8 @@ void rtc_setAlarmA(uint8_t RTC_ALARM_TYPE_X, uint8_t day_weekday, uint8_t hours,
 	LL_RTC_ClearFlag_ALRA(RTC);
 	LL_RTC_EnableWriteProtection(RTC);
 
-	NVIC_SetPriority(RTC_IRQn, RTC_PRIORITY);
-	NVIC_EnableIRQ(RTC_IRQn);
+	NVIC_SetPriority(RTC_TAMP_IRQn, RTC_PRIORITY);
+	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 
 	rtc_time.Hours = hours;
 	rtc_time.Minutes = minutes;
@@ -283,8 +283,8 @@ void rtc_setAlarmB(uint8_t RTC_ALARM_TYPE_X, uint8_t day_weekday, uint8_t hours,
 	LL_RTC_ClearFlag_ALRB(RTC);
 	LL_RTC_EnableWriteProtection(RTC);
 
-	NVIC_SetPriority(RTC_IRQn, RTC_PRIORITY);
-	NVIC_EnableIRQ(RTC_IRQn);
+	NVIC_SetPriority(RTC_TAMP_IRQn, RTC_PRIORITY);
+	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 
 	rtc_time.Hours = hours;
 	rtc_time.Minutes = minutes;
@@ -334,8 +334,8 @@ void rtc_setAlarmAAfter(uint32_t seconds)
 	if (seconds == 0)
 		return;
 
-	NVIC_SetPriority(RTC_IRQn, RTC_PRIORITY);
-	NVIC_EnableIRQ(RTC_IRQn);
+	NVIC_SetPriority(RTC_TAMP_IRQn, RTC_PRIORITY);
+	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 
 	rtc_time.Hours = localtime.hours;
 	rtc_time.Minutes = localtime.minutes;
@@ -374,8 +374,8 @@ void rtc_setAlarmBAfter(uint32_t seconds)
 	if (seconds == 0)
 		return;
 
-	NVIC_SetPriority(RTC_IRQn, RTC_PRIORITY);
-	NVIC_EnableIRQ(RTC_IRQn);
+	NVIC_SetPriority(RTC_TAMP_IRQn, RTC_PRIORITY);
+	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 
 	rtc_time.Hours = localtime.hours;
 	rtc_time.Minutes = localtime.minutes;
@@ -409,8 +409,8 @@ uint32_t system_BKPRead(uint32_t BKP_DRx)
 /*void rtc_setTamper1IT(RTCTamper_t *tamper)
 {
 	uint32_t tmpreg = 0U;
-	NVIC_SetPriority(RTC_IRQn, RTC_PRIORITY);
-	NVIC_EnableIRQ(RTC_IRQn);
+	NVIC_SetPriority(RTC_TAMP_IRQn, RTC_PRIORITY);
+	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 	if (tamper->Mode != RTC_TAMPER_RISING)
 		tamper->Mode = (uint32_t)(RTC_TAMPCR_TAMP1E << 1U);
 	if (tamper->EraseBKP != RTC_TAMPER_ERASEBKP_EN)
@@ -435,8 +435,8 @@ uint32_t system_BKPRead(uint32_t BKP_DRx)
 void rtc_setTamper2IT(RTCTamper_t *tamper)
 {
 	uint32_t tmpreg = 0U;
-	NVIC_SetPriority(RTC_IRQn, RTC_PRIORITY);
-	NVIC_EnableIRQ(RTC_IRQn);
+	NVIC_SetPriority(RTC_TAMP_IRQn, RTC_PRIORITY);
+	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 	if (tamper->Mode != RTC_TAMPER_RISING)
 		tamper->Mode = (uint32_t)(RTC_TAMPCR_TAMP2E << 1U);
 	if (tamper->EraseBKP != RTC_TAMPER_ERASEBKP_EN)
@@ -462,8 +462,8 @@ void rtc_setTamper2IT(RTCTamper_t *tamper)
 void rtc_setTamper3IT(RTCTamper_t *tamper)
 {
 	uint32_t tmpreg = 0U;
-	NVIC_SetPriority(RTC_IRQn, RTC_PRIORITY);
-	NVIC_EnableIRQ(RTC_IRQn);
+	NVIC_SetPriority(RTC_TAMP_IRQn, RTC_PRIORITY);
+	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 	if (tamper->Mode != RTC_TAMPER_RISING)
 		tamper->Mode = (uint32_t)(RTC_TAMPCR_TAMP3E << 1U);
 	if (tamper->EraseBKP != RTC_TAMPER_ERASEBKP_EN)
