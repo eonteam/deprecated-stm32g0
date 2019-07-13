@@ -204,9 +204,9 @@ void system_standbyUntilWakeUpPin(uint32_t WAKEUP_PIN_x, uint8_t polarity)
 	LL_PWR_DisableWakeUpPin(WAKEUP_PIN_x);
 	LL_PWR_ClearFlag_WU();
 	if(polarity){
-		LL_PWR_SetWakeUpPinPolarityHigh(WAKE_PIN_x);
+		LL_PWR_SetWakeUpPinPolarityHigh(WAKEUP_PIN_x);
 	}else{
-		LL_PWR_SetWakeUpPinPolarityLow(WAKE_PIN_x);
+		LL_PWR_SetWakeUpPinPolarityLow(WAKEUP_PIN_x);
 	}
 	LL_PWR_EnableWakeUpPin(WAKEUP_PIN_x);
 	LL_PWR_ClearFlag_WU();
