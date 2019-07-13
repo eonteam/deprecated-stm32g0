@@ -41,7 +41,7 @@ void system_sleepSeconds(uint32_t seconds)
 {
 	__disable_irq();
 	LL_SYSTICK_DisableIT();
-	NVIC_EnableIRQ(RTC_IRQn);
+	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 	rtc_setAlarmBAfter(seconds);
 	LL_LPM_EnableSleep();
 	__WFI();
@@ -53,7 +53,7 @@ void system_sleepMillis(uint32_t milliseconds)
 {
 	__disable_irq();
 	LL_SYSTICK_DisableIT();
-	NVIC_EnableIRQ(RTC_IRQn);
+	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 	rtc_setWKUPMillis(milliseconds);
 	LL_LPM_EnableSleep();
 	__WFI();
@@ -71,7 +71,7 @@ void system_sleepLPSeconds(uint32_t seconds)
 	CLOCK_HSI_2MHZ();
 	__disable_irq();
 	LL_SYSTICK_DisableIT();
-	NVIC_EnableIRQ(RTC_IRQn);
+	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 	rtc_setAlarmBAfter(seconds);
 	LL_PWR_EnableLowPowerRunMode();
 	LL_LPM_EnableSleep();
@@ -96,7 +96,7 @@ void system_sleepLPMillis(uint32_t milliseconds)
 	CLOCK_HSI_2MHZ();
 	__disable_irq();
 	LL_SYSTICK_DisableIT();
-	NVIC_EnableIRQ(RTC_IRQn);
+	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 	rtc_setWKUPMillis(milliseconds);
 	LL_PWR_EnableLowPowerRunMode();
 	LL_LPM_EnableSleep();
@@ -118,7 +118,7 @@ void system_stop0Seconds(uint32_t seconds)
 	CLOCK_HSI_2MHZ();
 	__disable_irq();
 	LL_SYSTICK_DisableIT();
-	NVIC_EnableIRQ(RTC_IRQn);
+	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 	rtc_setAlarmBAfter(seconds);
 	LL_PWR_SetPowerMode(LL_PWR_MODE_STOP0);
 	LL_LPM_EnableDeepSleep();
@@ -133,7 +133,7 @@ void system_stop0Millis(uint32_t milliseconds)
 	CLOCK_HSI_2MHZ();
 	__disable_irq();
 	LL_SYSTICK_DisableIT();
-	NVIC_EnableIRQ(RTC_IRQn);
+	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 	rtc_setWKUPMillis(milliseconds);
 	LL_PWR_SetPowerMode(LL_PWR_MODE_STOP0);
 	LL_LPM_EnableDeepSleep();
@@ -182,7 +182,7 @@ void system_standbySeconds(uint32_t seconds)
 	__disable_irq();
 	LL_SYSTICK_DisableIT();
 	LL_PWR_ClearFlag_WU();
-	NVIC_EnableIRQ(RTC_IRQn);
+	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 	rtc_setAlarmBAfter(seconds);
 	LL_PWR_SetPowerMode(LL_PWR_MODE_STANDBY);
 	LL_LPM_EnableDeepSleep();
