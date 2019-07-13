@@ -49,7 +49,7 @@
  ===============================================================================
  */
 
-__STATIC_INLINE void LSI_init(bool resetBKP)
+__STATIC_INLINE void LSI_init(void)
 {
 	LL_RCC_LSI_Enable();
 
@@ -58,38 +58,22 @@ __STATIC_INLINE void LSI_init(bool resetBKP)
 	{
 	}
 
-	LL_PWR_EnableBkUpAccess();
-
-	if (resetBKP)
-	{
-		LL_RCC_ForceBackupDomainReset();
-		LL_RCC_ReleaseBackupDomainReset();
-	}
-
 	LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSI);
 
 	LL_RCC_EnableRTC();
 }
 
-__STATIC_INLINE void LSE_init(bool resetBKP)
+__STATIC_INLINE void LSE_init(void)
 {
-  LL_RCC_LSE_Enable();
+	LL_RCC_LSE_Enable();
 
-	while(LL_RCC_LSE_IsReady() != 1)
-  {
-  };
-
-	LL_PWR_EnableBkUpAccess();
-
-	if (resetBKP)
+	while (LL_RCC_LSE_IsReady() != 1)
 	{
-		LL_RCC_ForceBackupDomainReset();
-		LL_RCC_ReleaseBackupDomainReset();
-	}
+	};
 
 	LL_RCC_SetRTCClockSource(LL_RCC_RTC_CLKSOURCE_LSE);
 
-  LL_RCC_EnableRTC();
+	LL_RCC_EnableRTC();
 }
 
 __STATIC_INLINE void RTC_setWAKEUPTIMER(uint32_t wakeupCounter, uint32_t wakeupClock)
@@ -132,7 +116,15 @@ void rtc_initLsi(bool resetBKP)
 {
 	LL_RTC_InitTypeDef RTC_InitStruct;
 
-	LSI_init(resetBKP);
+	LL_PWR_EnableBkUpAccess();
+
+	if (resetBKP)
+	{
+		LL_RCC_ForceBackupDomainReset();
+		LL_RCC_ReleaseBackupDomainReset();
+	}
+
+	LSI_init();
 
 	/* Peripheral clock enable */
 	LL_RCC_EnableRTC();
@@ -141,8 +133,8 @@ void rtc_initLsi(bool resetBKP)
 
 	/*Initialize RTC and set the Time and Date */
 	RTC_InitStruct.HourFormat = LL_RTC_HOURFORMAT_24HOUR;
-  RTC_InitStruct.AsynchPrescaler = 127;
-  RTC_InitStruct.SynchPrescaler = 255;
+	RTC_InitStruct.AsynchPrescaler = 127;
+	RTC_InitStruct.SynchPrescaler = 255;
 	LL_RTC_Init(RTC, &RTC_InitStruct);
 }
 
@@ -150,7 +142,15 @@ void rtc_initLse(bool resetBKP)
 {
 	LL_RTC_InitTypeDef RTC_InitStruct;
 
-	LSE_init(resetBKP);
+	LL_PWR_EnableBkUpAccess();
+
+	if (resetBKP)
+	{
+		LL_RCC_ForceBackupDomainReset();
+		LL_RCC_ReleaseBackupDomainReset();
+	}
+
+	LSE_init();
 
 	/* Peripheral clock enable */
 	LL_RCC_EnableRTC();
@@ -159,8 +159,8 @@ void rtc_initLse(bool resetBKP)
 
 	/*Initialize RTC and set the Time and Date */
 	RTC_InitStruct.HourFormat = LL_RTC_HOURFORMAT_24HOUR;
-  RTC_InitStruct.AsynchPrescaler = 127;
-  RTC_InitStruct.SynchPrescaler = 255;
+	RTC_InitStruct.AsynchPrescaler = 127;
+	RTC_InitStruct.SynchPrescaler = 255;
 	LL_RTC_Init(RTC, &RTC_InitStruct);
 }
 
@@ -232,8 +232,8 @@ void rtc_setWKUPMillis(uint16_t milliseconds)
 {
 	uint16_t ms_fix = 0;
 
-	LL_RTC_ClearFlag_WUT(RTC);												 //added ok
-	LL_RTC_WAKEUP_Disable(RTC);												 //ok
+	LL_RTC_ClearFlag_WUT(RTC);	//added ok
+	LL_RTC_WAKEUP_Disable(RTC); //ok
 	LL_RTC_DisableIT_WUT(RTC);
 
 	NVIC_SetPriority(RTC_TAMP_IRQn, RTC_PRIORITY);
@@ -251,8 +251,8 @@ void rtc_setWKUPMillis(uint16_t milliseconds)
 
 void rtc_setWKUPSeconds(uint16_t seconds)
 {
-	LL_RTC_ClearFlag_WUT(RTC);												 //added ok
-	LL_RTC_WAKEUP_Disable(RTC);												 //ok
+	LL_RTC_ClearFlag_WUT(RTC);	//added ok
+	LL_RTC_WAKEUP_Disable(RTC); //ok
 	LL_RTC_DisableIT_WUT(RTC);
 
 	NVIC_SetPriority(RTC_TAMP_IRQn, RTC_PRIORITY);
@@ -620,7 +620,7 @@ void RTC_TAMP_IRQHandler(void)
 		LL_RTC_ClearFlag_ALRB(RTC); // Clear the ALARMB interrupt pending bit
 	}
 
-/*#if defined(STM32L063xx) || defined(STM32L062xx) || defined(STM32L061xx) || \
+	/*#if defined(STM32L063xx) || defined(STM32L062xx) || defined(STM32L061xx) || \
 		defined(STM32L053xx) || defined(STM32L052xx) || defined(STM32L051xx) || \
 		defined(STM32L083xx) || defined(STM32L082xx) || defined(STM32L081xx) || \
 		defined(STM32L073xx) || defined(STM32L072xx) || defined(STM32L071xx) || \
