@@ -8,7 +8,6 @@
     "compiler": "arm-none-eabi",
     "programmer": "stcubeprog",
     "modules": [
-        "gpio",
         "uart1",
         "uart2"
     ],
