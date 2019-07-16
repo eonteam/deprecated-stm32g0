@@ -60,13 +60,9 @@ static void ADC_Init(void)
 	LL_ADC_InitTypeDef ADC_InitStruct;
 	LL_ADC_REG_InitTypeDef ADC_REG_InitStruct;
 
-	//ADC
 	LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_ADC);
-	ADC_InitStruct.Resolution = LL_ADC_RESOLUTION_12B;
-	ADC_InitStruct.DataAlignment = LL_ADC_DATA_ALIGN_RIGHT;
-	ADC_InitStruct.LowPowerMode = LL_ADC_LP_AUTOWAIT_AUTOPOWEROFF; // If the ADC clock is less than 2MHz, we can enable LowPowerFrequency
-	LL_ADC_Init(ADC1, &ADC_InitStruct);
 
+	//ADC
 	ADC_REG_InitStruct.TriggerSource = LL_ADC_REG_TRIG_SOFTWARE;
 	ADC_REG_InitStruct.SequencerDiscont = LL_ADC_REG_SEQ_DISCONT_DISABLE;
 	ADC_REG_InitStruct.ContinuousMode = LL_ADC_REG_CONV_SINGLE;
@@ -74,17 +70,21 @@ static void ADC_Init(void)
 	ADC_REG_InitStruct.Overrun = LL_ADC_REG_OVR_DATA_OVERWRITTEN;
 	LL_ADC_REG_Init(ADC1, &ADC_REG_InitStruct);
 
-	LL_ADC_SetClock(ADC1, LL_ADC_CLOCK_SYNC_PCLK_DIV2);
-
-	LL_ADC_SetSamplingTimeCommonChannels(ADC1, LL_ADC_SAMPLINGTIME_COMMON_1, _adc_sample_time);
-
 	LL_ADC_SetOverSamplingScope(ADC1, LL_ADC_OVS_DISABLE);
-
 	LL_ADC_SetCommonFrequencyMode(__LL_ADC_COMMON_INSTANCE(ADC1), LL_ADC_CLOCK_FREQ_MODE_HIGH);
+	LL_ADC_REG_SetSequencerConfigurable(ADC1, LL_ADC_REG_SEQ_CONFIGURABLE);
+	LL_ADC_SetSamplingTimeCommonChannels(ADC1, LL_ADC_SAMPLINGTIME_COMMON_1, _adc_sample_time);
+	LL_ADC_DisableIT_EOC(ADC1);
+	LL_ADC_DisableIT_EOS(ADC1);
+	LL_ADC_EnableInternalRegulator(ADC1);
 
 	LL_ADC_EnableIT_EOC(ADC1);
 
-	LL_ADC_DisableIT_EOS(ADC1);
+	ADC_InitStruct.Clock = LL_ADC_CLOCK_SYNC_PCLK_DIV2;
+	ADC_InitStruct.Resolution = LL_ADC_RESOLUTION_12B;
+	ADC_InitStruct.DataAlignment = LL_ADC_DATA_ALIGN_RIGHT;
+	ADC_InitStruct.LowPowerMode = LL_ADC_LP_MODE_NONE;
+	LL_ADC_Init(ADC1, &ADC_InitStruct);
 
 	LL_ADC_StartCalibration(ADC1);
 
@@ -107,6 +107,8 @@ uint16_t adc_readU(pin_t pin)
 	if (adcChannelConfigured != PIN_MAP[pin].adcCh)
 	{
 		LL_ADC_REG_SetSequencerChannels(ADC1, PIN_MAP[pin].adcCh);
+		LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_1, PIN_MAP[pin].adcCh);
+		LL_ADC_SetChannelSamplingTime(ADC1, PIN_MAP[pin].adcCh, LL_ADC_SAMPLINGTIME_COMMON_1);
 		adcChannelConfigured = PIN_MAP[pin].adcCh;
 	}
 
