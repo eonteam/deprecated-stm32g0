@@ -20,7 +20,7 @@
 #define TOTAL_PINS 58
 #endif
 
-#if !defined(STM32G070RB) || defined(STM32G071RB)
+#if !defined(STM32G070RB) && !defined(STM32G071RB)
 #error "Se debe elegir el STM32G070RB o STM32G071RB"
 #endif
 
