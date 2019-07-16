@@ -76,7 +76,7 @@ static void ADC_Init(void)
 
 	LL_ADC_SetClock(ADC1, LL_ADC_CLOCK_SYNC_PCLK_DIV2);
 
-	LL_ADC_SetSamplingTimeCommonChannels(ADC1, _adc_sample_time);
+	LL_ADC_SetSamplingTimeCommonChannels(ADC1, LL_ADC_SAMPLINGTIME_COMMON_1, _adc_sample_time);
 
 	LL_ADC_SetOverSamplingScope(ADC1, LL_ADC_OVS_DISABLE);
 
