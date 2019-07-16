@@ -151,9 +151,9 @@ uint16_t adc_readU(pin_t pin)
 		}
 
 		LL_ADC_REG_StartConversion(ADC1);
-		while ((LL_ADC_ReadReg(ADC1, ISR) & LL_ADC_FLAG_EOS) == RESET)
-		{
-		}
+		// while ((LL_ADC_ReadReg(ADC1, ISR) & LL_ADC_FLAG_EOS) == RESET)
+		// {
+		// }
 		while (LL_ADC_IsActiveFlag_EOC(ADC1) == 0)
 		{
 		}
