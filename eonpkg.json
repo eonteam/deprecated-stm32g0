@@ -8,6 +8,7 @@
     "compiler": "arm-none-eabi",
     "programmer": "stcubeprog",
     "modules": [
+        "adc",
         "uart1",
         "uart2"
     ],
