@@ -23,6 +23,7 @@
 // Note: It isn't the number of channels
 #define ADC_BUFFERSIZE 18
 #define ADC_SAMPLING_TIME LL_ADC_SAMPLINGTIME_1CYCLE_5
+#define ADC_DELAY_CALIB_ENABLE_CPU_CYCLES (LL_ADC_DELAY_CALIB_ENABLE_ADC_CYCLES * 32)
 
 /** 
  ===============================================================================
