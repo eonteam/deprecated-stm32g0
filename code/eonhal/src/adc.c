@@ -58,6 +58,7 @@ void adc_setSampleTime(uint8_t ADC_SampleTime)
 static void ADC_Init(void)
 {
 	__IO uint32_t wait_loop_index = 0U;
+	__IO uint32_t backup_setting_adc_dma_transfer = 0U;
 	LL_ADC_InitTypeDef ADC_InitStruct;
 	LL_ADC_REG_InitTypeDef ADC_REG_InitStruct;
 
@@ -95,6 +96,7 @@ static void ADC_Init(void)
 		wait_loop_index--;
 	}
 
+	backup_setting_adc_dma_transfer = LL_ADC_REG_GetDMATransfer(ADC1);
 	LL_ADC_REG_SetDMATransfer(ADC1, LL_ADC_REG_DMA_TRANSFER_NONE);
 
 	LL_ADC_StartCalibration(ADC1);
@@ -102,6 +104,8 @@ static void ADC_Init(void)
 	while (LL_ADC_IsCalibrationOnGoing(ADC1) != 0)
 	{
 	}
+
+	LL_ADC_REG_SetDMATransfer(ADC1, backup_setting_adc_dma_transfer);
 
 	wait_loop_index = (ADC_DELAY_CALIB_ENABLE_CPU_CYCLES >> 1);
 	while (wait_loop_index != 0)
@@ -140,8 +144,8 @@ uint16_t adc_readU(pin_t pin)
 	{
 		ADC_ConvertedValues[i] = 0;
 
-		if ((LL_ADC_IsEnabled(ADC1) == 1) ||
-				(LL_ADC_IsDisableOngoing(ADC1) == 0))
+		if ((LL_ADC_IsEnabled(ADC1) != 1) ||
+				(LL_ADC_IsDisableOngoing(ADC1) != 0))
 		{
 			return 0;
 		}
