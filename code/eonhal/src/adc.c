@@ -56,7 +56,7 @@ void adc_setSampleTime(uint8_t ADC_SampleTime)
 /* Inicializa el ADC */
 static void ADC_Init(void)
 {
-
+	__IO uint32_t wait_loop_index = 0U;
 	LL_ADC_InitTypeDef ADC_InitStruct;
 	LL_ADC_REG_InitTypeDef ADC_REG_InitStruct;
 
@@ -64,6 +64,7 @@ static void ADC_Init(void)
 
 	//ADC
 	ADC_REG_InitStruct.TriggerSource = LL_ADC_REG_TRIG_SOFTWARE;
+	ADC_REG_InitStruct.SequencerLength = LL_ADC_REG_SEQ_SCAN_DISABLE;
 	ADC_REG_InitStruct.SequencerDiscont = LL_ADC_REG_SEQ_DISCONT_DISABLE;
 	ADC_REG_InitStruct.ContinuousMode = LL_ADC_REG_CONV_SINGLE;
 	ADC_REG_InitStruct.DMATransfer = LL_ADC_REG_DMA_TRANSFER_NONE;
@@ -76,19 +77,42 @@ static void ADC_Init(void)
 	LL_ADC_SetSamplingTimeCommonChannels(ADC1, LL_ADC_SAMPLINGTIME_COMMON_1, _adc_sample_time);
 	LL_ADC_DisableIT_EOC(ADC1);
 	LL_ADC_DisableIT_EOS(ADC1);
-	LL_ADC_EnableInternalRegulator(ADC1);
 
-	LL_ADC_EnableIT_EOC(ADC1);
-
-	ADC_InitStruct.Clock = LL_ADC_CLOCK_SYNC_PCLK_DIV2;
+	ADC_InitStruct.Clock = LL_ADC_CLOCK_SYNC_PCLK_DIV4;
 	ADC_InitStruct.Resolution = LL_ADC_RESOLUTION_12B;
 	ADC_InitStruct.DataAlignment = LL_ADC_DATA_ALIGN_RIGHT;
 	ADC_InitStruct.LowPowerMode = LL_ADC_LP_MODE_NONE;
 	LL_ADC_Init(ADC1, &ADC_InitStruct);
 
+	LL_ADC_Disable(ADC1);
+
+	LL_ADC_EnableInternalRegulator(ADC1);
+
+	wait_loop_index = ((LL_ADC_DELAY_INTERNAL_REGUL_STAB_US * (SystemCoreClock / (100000 * 2))) / 10);
+	while (wait_loop_index != 0)
+	{
+		wait_loop_index--;
+	}
+
+	LL_ADC_REG_SetDMATransfer(ADC1, LL_ADC_REG_DMA_TRANSFER_NONE);
+
 	LL_ADC_StartCalibration(ADC1);
 
+	while (LL_ADC_IsCalibrationOnGoing(ADC1) != 0)
+	{
+	}
+
+	wait_loop_index = (ADC_DELAY_CALIB_ENABLE_CPU_CYCLES >> 1);
+	while (wait_loop_index != 0)
+	{
+		wait_loop_index--;
+	}
+
 	LL_ADC_Enable(ADC1);
+
+	while (LL_ADC_IsActiveFlag_ADRDY(ADC1) == 0)
+	{
+	}
 }
 
 uint16_t adc_readU(pin_t pin)
@@ -106,7 +130,6 @@ uint16_t adc_readU(pin_t pin)
 
 	if (adcChannelConfigured != PIN_MAP[pin].adcCh)
 	{
-		LL_ADC_REG_SetSequencerChannels(ADC1, PIN_MAP[pin].adcCh);
 		LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_1, PIN_MAP[pin].adcCh);
 		LL_ADC_SetChannelSamplingTime(ADC1, PIN_MAP[pin].adcCh, LL_ADC_SAMPLINGTIME_COMMON_1);
 		adcChannelConfigured = PIN_MAP[pin].adcCh;
@@ -115,21 +138,30 @@ uint16_t adc_readU(pin_t pin)
 	for (i = 0; i < ADC_BUFFERSIZE; i++)
 	{
 		ADC_ConvertedValues[i] = 0;
+
+		if ((LL_ADC_IsEnabled(ADC1) == 1) ||
+				(LL_ADC_IsDisableOngoing(ADC1) == 0))
+		{
+			return 0;
+		}
+
+		while (LL_ADC_REG_IsConversionOngoing(ADC1) != 0)
+		{
+		}
+
+		LL_ADC_REG_StartConversion(ADC1);
+		while ((LL_ADC_ReadReg(ADC1, ISR) & LL_ADC_FLAG_EOS) == RESET)
+		{
+		}
+		while (LL_ADC_IsActiveFlag_EOC(ADC1) == 0)
+		{
+		}
+
 		LL_ADC_ClearFlag_EOC(ADC1);
 		LL_ADC_ClearFlag_EOS(ADC1);
 		LL_ADC_ClearFlag_OVR(ADC1);
-		LL_ADC_REG_StartConversion(ADC1);
-		while ((LL_ADC_ReadReg(ADC1, ISR) & LL_ADC_FLAG_EOS) == RESET)
-			;
-		if ((LL_ADC_ReadReg(ADC1, ISR) & LL_ADC_FLAG_EOC) == LL_ADC_FLAG_EOC)
-		{
-			if ((LL_ADC_ReadReg(ADC1, CR) & ADC_CR_ADSTART) == RESET)
-			{
-				LL_ADC_DisableIT_EOC(ADC1);
-				LL_ADC_DisableIT_EOS(ADC1);
-			}
-		}
-		ADC_ConvertedValues[i] = ADC1->DR;
+
+		ADC_ConvertedValues[i] = LL_ADC_REG_ReadConversionData12(ADC1);
 		ADC_SummatedValue += ADC_ConvertedValues[i];
 	}
 
