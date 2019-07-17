@@ -58,13 +58,11 @@ void adc_setSampleTime(uint8_t ADC_SampleTime)
 static void ADC_Init(void)
 {
 	__IO uint32_t wait_loop_index = 0U;
-	__IO uint32_t backup_setting_adc_dma_transfer = 0U;
-	LL_ADC_InitTypeDef ADC_InitStruct;
-	LL_ADC_REG_InitTypeDef ADC_REG_InitStruct;
+	LL_ADC_REG_InitTypeDef ADC_REG_InitStruct = {0};
+	LL_ADC_InitTypeDef ADC_InitStruct = {0};
 
 	LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_ADC);
 
-	//ADC
 	ADC_REG_InitStruct.TriggerSource = LL_ADC_REG_TRIG_SOFTWARE;
 	ADC_REG_InitStruct.SequencerLength = LL_ADC_REG_SEQ_SCAN_DISABLE;
 	ADC_REG_InitStruct.SequencerDiscont = LL_ADC_REG_SEQ_DISCONT_DISABLE;
@@ -72,51 +70,47 @@ static void ADC_Init(void)
 	ADC_REG_InitStruct.DMATransfer = LL_ADC_REG_DMA_TRANSFER_NONE;
 	ADC_REG_InitStruct.Overrun = LL_ADC_REG_OVR_DATA_OVERWRITTEN;
 	LL_ADC_REG_Init(ADC1, &ADC_REG_InitStruct);
-
 	LL_ADC_SetOverSamplingScope(ADC1, LL_ADC_OVS_DISABLE);
-	LL_ADC_SetCommonFrequencyMode(__LL_ADC_COMMON_INSTANCE(ADC1), LL_ADC_CLOCK_FREQ_MODE_HIGH);
+	LL_ADC_SetCommonFrequencyMode(__LL_ADC_COMMON_INSTANCE(ADC1), LL_ADC_RESOLUTION_12B);
 	LL_ADC_REG_SetSequencerConfigurable(ADC1, LL_ADC_REG_SEQ_CONFIGURABLE);
-	LL_ADC_SetSamplingTimeCommonChannels(ADC1, LL_ADC_SAMPLINGTIME_COMMON_1, _adc_sample_time);
+	LL_ADC_SetSamplingTimeCommonChannels(ADC1, LL_ADC_SAMPLINGTIME_COMMON_1, LL_ADC_SAMPLINGTIME_39CYCLES_5);
 	LL_ADC_DisableIT_EOC(ADC1);
 	LL_ADC_DisableIT_EOS(ADC1);
-
 	ADC_InitStruct.Clock = LL_ADC_CLOCK_SYNC_PCLK_DIV4;
 	ADC_InitStruct.Resolution = LL_ADC_RESOLUTION_12B;
 	ADC_InitStruct.DataAlignment = LL_ADC_DATA_ALIGN_RIGHT;
 	ADC_InitStruct.LowPowerMode = LL_ADC_LP_MODE_NONE;
 	LL_ADC_Init(ADC1, &ADC_InitStruct);
 
-	LL_ADC_Disable(ADC1);
-
-	LL_ADC_EnableInternalRegulator(ADC1);
-
-	wait_loop_index = ((LL_ADC_DELAY_INTERNAL_REGUL_STAB_US * (SystemCoreClock / (100000 * 2))) / 10);
-	while (wait_loop_index != 0)
+	if (LL_ADC_IsEnabled(ADC1) == 0)
 	{
-		wait_loop_index--;
-	}
+		LL_ADC_EnableInternalRegulator(ADC1);
 
-	backup_setting_adc_dma_transfer = LL_ADC_REG_GetDMATransfer(ADC1);
-	LL_ADC_REG_SetDMATransfer(ADC1, LL_ADC_REG_DMA_TRANSFER_NONE);
+		wait_loop_index = ((LL_ADC_DELAY_INTERNAL_REGUL_STAB_US * (SystemCoreClock / (100000 * 2))) / 10);
+		while (wait_loop_index != 0)
+		{
+			wait_loop_index--;
+		}
 
-	LL_ADC_StartCalibration(ADC1);
+		LL_ADC_REG_SetDMATransfer(ADC1, LL_ADC_REG_DMA_TRANSFER_NONE);
 
-	while (LL_ADC_IsCalibrationOnGoing(ADC1) != 0)
-	{
-	}
+		LL_ADC_StartCalibration(ADC1);
 
-	LL_ADC_REG_SetDMATransfer(ADC1, backup_setting_adc_dma_transfer);
+		while (LL_ADC_IsCalibrationOnGoing(ADC1) != 0)
+		{
+		}
 
-	wait_loop_index = (ADC_DELAY_CALIB_ENABLE_CPU_CYCLES >> 1);
-	while (wait_loop_index != 0)
-	{
-		wait_loop_index--;
-	}
+		wait_loop_index = (ADC_DELAY_CALIB_ENABLE_CPU_CYCLES >> 1);
+		while (wait_loop_index != 0)
+		{
+			wait_loop_index--;
+		}
 
-	LL_ADC_Enable(ADC1);
+		LL_ADC_Enable(ADC1);
 
-	while (LL_ADC_IsActiveFlag_ADRDY(ADC1) == 0)
-	{
+		while (LL_ADC_IsActiveFlag_ADRDY(ADC1) == 0)
+		{
+		}
 	}
 }
 
@@ -155,9 +149,11 @@ uint16_t adc_readU(pin_t pin)
 		}
 
 		LL_ADC_REG_StartConversion(ADC1);
-		// while ((LL_ADC_ReadReg(ADC1, ISR) & LL_ADC_FLAG_EOS) == RESET)
-		// {
-		// }
+
+		while (LL_ADC_IsActiveFlag_EOS(ADC1) == 0)
+		{
+		}
+
 		while (LL_ADC_IsActiveFlag_EOC(ADC1) == 0)
 		{
 		}
