@@ -19,6 +19,8 @@ extern "C"
 {
 #endif
 
+#define IRQ(__IRQ__) __IRQ__()
+
   // **** Types
   typedef uint8_t pin_t;
   typedef uint8_t mode_t;
