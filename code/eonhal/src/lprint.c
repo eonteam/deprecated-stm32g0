@@ -37,31 +37,30 @@ static void _lprintIntBase(int64_t n, uint8_t base)
   }
 }
 
-static void _lprintNum(int64_t n, uint8_t isfloat){
+static void _lprintNum(int64_t n, uint8_t isfloat)
+{
   uint32_t int_part;
-	uint8_t remainder;
+  uint8_t remainder;
 
-	// Handle negative numbers
-	if (n < 0)
-	{
-		LPUTC('-');
-		n = -n;
-	}
+  // Handle negative numbers
+  if (n < 0)
+  {
+    LPUTC('-');
+    n = -n;
+  }
 
-	if (!isfloat)
-	{
-		_lprintIntBase(n, 10);
-		return;
-	}
+  if (!isfloat)
+  {
+    _lprintIntBase(n, 10);
+    return;
+  }
 
-	remainder = n % 100;
-	int_part = (uint32_t)((n - remainder) / 100);
-	_lprintIntBase(int_part, 10);
-	LPUTC('.');
-	_lprintIntBase(remainder, 10);
+  remainder = n % 100;
+  int_part = (uint32_t)((n - remainder) / 100);
+  _lprintIntBase(int_part, 10);
+  LPUTC('.');
+  _lprintIntBase(remainder, 10);
 }
-
-
 
 void lprint(const char *format, ...)
 {
@@ -101,7 +100,14 @@ void lprint(const char *format, ...)
             _lprintIntBase(w, 16);
             break;
           case 'd':
-            _lprintNum(w, 0);
+            _lprintIntBase(w, 10);
+            break;
+          case 'D':
+            if (w < 10)
+            {
+              LPUTC('0');
+            }
+            _lprintIntBase(w, 10);
             break;
           case 'f':
             _lprintNum(w, 1);
