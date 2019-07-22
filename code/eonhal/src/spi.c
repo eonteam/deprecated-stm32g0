@@ -73,8 +73,6 @@ void spi_init(SPI_TypeDef *SPIx, uint32_t freq_hz, uint32_t datamode, pin_t sck,
 	else
 		_spi_presc = LL_SPI_BAUDRATEPRESCALER_DIV256;
 
-	LL_SPI_Disable(SPIx);
-
 	mspi_init.Mode = LL_SPI_MODE_MASTER;
 	mspi_init.TransferDirection = LL_SPI_FULL_DUPLEX;
 	mspi_init.BaudRate = _spi_presc;
@@ -87,6 +85,9 @@ void spi_init(SPI_TypeDef *SPIx, uint32_t freq_hz, uint32_t datamode, pin_t sck,
 	mspi_init.CRCPoly = 7;
 
 	LL_SPI_Init(SPIx, &mspi_init);
+	LL_SPI_SetRxFIFOThreshold(SPIx, LL_SPI_RX_FIFO_TH_QUARTER);
+	LL_SPI_SetStandard(SPIx, LL_SPI_PROTOCOL_MOTOROLA);
+	LL_SPI_EnableNSSPulseMgt(SPIx);
 
 	LL_SPI_Enable(SPIx);
 }
@@ -156,17 +157,18 @@ uint8_t spi_write8(SPI_TypeDef *SPIx, uint8_t data)
 {
 
 	/* SPI - 8 bits data */
+	LL_SPI_SetRxFIFOThreshold(SPIx, LL_SPI_RX_FIFO_TH_QUARTER);
 	LL_SPI_SetDataWidth(SPIx, LL_SPI_DATAWIDTH_8BIT);
 
 	while (LL_SPI_IsActiveFlag_TXE(SPIx) == RESET)
 		;
 	/* Fill output buffer with data */
-	SPIx->DR = (uint8_t)data;
+	LL_SPI_TransmitData8(SPIx, data);
 	/* Wait for transmission to complete */
 	while (LL_SPI_IsActiveFlag_RXNE(SPIx) == RESET)
 		;
 	/* Return data from buffer */
-	return (uint8_t)SPIx->DR;
+	return (uint8_t)LL_SPI_ReceiveData8(SPIx);
 }
 
 /**
@@ -181,6 +183,7 @@ void spi_writeMultiple8(SPI_TypeDef *SPIx, const uint8_t *pTData, uint8_t *pRDat
 {
 	uint8_t dummy = 0;
 	/* SPI - 8 bits data */
+	LL_SPI_SetRxFIFOThreshold(SPIx, LL_SPI_RX_FIFO_TH_QUARTER);
 	LL_SPI_SetDataWidth(SPIx, LL_SPI_DATAWIDTH_8BIT);
 
 	while (pSize--)
@@ -188,15 +191,15 @@ void spi_writeMultiple8(SPI_TypeDef *SPIx, const uint8_t *pTData, uint8_t *pRDat
 		while (LL_SPI_IsActiveFlag_TXE(SPIx) == RESET)
 			;
 		/* Fill output buffer with data */
-		SPIx->DR = (uint8_t)*pTData++;
+		LL_SPI_TransmitData8(SPIx, *pTData++);
 		/* Wait for transmission to complete */
 		while (LL_SPI_IsActiveFlag_RXNE(SPIx) == RESET)
 			;
 		/* Return data from buffer */
 		if (pRData)
-			*pRData++ = (uint8_t)SPIx->DR;
+			*pRData++ = (uint8_t)LL_SPI_ReceiveData8(SPIx);
 		else
-			dummy = SPIx->DR;
+			dummy = LL_SPI_ReceiveData8(SPIx);
 	}
 	UNUSED(dummy);
 }
@@ -224,6 +227,7 @@ uint8_t spi_read8(SPI_TypeDef *SPIx)
 void spi_readMultiple8(SPI_TypeDef *SPIx, uint8_t *pRData, uint8_t pSize)
 {
 	/* SPI - 8 bits data */
+	LL_SPI_SetRxFIFOThreshold(SPIx, LL_SPI_RX_FIFO_TH_QUARTER);
 	LL_SPI_SetDataWidth(SPIx, LL_SPI_DATAWIDTH_8BIT);
 
 	while (pSize--)
@@ -231,12 +235,12 @@ void spi_readMultiple8(SPI_TypeDef *SPIx, uint8_t *pRData, uint8_t pSize)
 		while (LL_SPI_IsActiveFlag_TXE(SPIx) == RESET)
 			;
 		/* Fill output buffer with data */
-		SPIx->DR = (uint8_t)0xFF;
+		LL_SPI_TransmitData8(SPIx, 0xFF);
 		/* Wait for transmission to complete */
 		while (LL_SPI_IsActiveFlag_RXNE(SPIx) == RESET)
 			;
 		/* Return data from buffer */
-		*pRData++ = (uint8_t)SPIx->DR;
+		*pRData++ = (uint8_t)LL_SPI_ReceiveData8(SPIx);
 	}
 }
 
@@ -256,17 +260,18 @@ uint16_t spi_write16(SPI_TypeDef *SPIx, uint16_t data)
 {
 
 	/* SPI - 16 bits data */
+	LL_SPI_SetRxFIFOThreshold(SPIx, LL_SPI_RX_FIFO_TH_HALF);
 	LL_SPI_SetDataWidth(SPIx, LL_SPI_DATAWIDTH_16BIT);
 
 	while (LL_SPI_IsActiveFlag_TXE(SPIx) == RESET)
 		;
 	/* Fill output buffer with data */
-	SPIx->DR = (uint16_t)data;
+	LL_SPI_TransmitData16(SPIx, data);
 	/* Wait for transmission to complete */
 	while (LL_SPI_IsActiveFlag_RXNE(SPIx) == RESET)
 		;
 	/* Return data from buffer */
-	return (uint16_t)SPIx->DR;
+	return (uint16_t)LL_SPI_ReceiveData16(SPIx);
 }
 
 /**
@@ -281,6 +286,7 @@ void spi_writeMultiple16(SPI_TypeDef *SPIx, const uint16_t *pTData, uint16_t *pR
 {
 	uint16_t dummy = 0;
 	/* SPI - 16 bits data */
+	LL_SPI_SetRxFIFOThreshold(SPIx, LL_SPI_RX_FIFO_TH_HALF);
 	LL_SPI_SetDataWidth(SPIx, LL_SPI_DATAWIDTH_16BIT);
 
 	while (pSize--)
@@ -288,15 +294,15 @@ void spi_writeMultiple16(SPI_TypeDef *SPIx, const uint16_t *pTData, uint16_t *pR
 		while (LL_SPI_IsActiveFlag_TXE(SPIx) == RESET)
 			;
 		/* Fill output buffer with data */
-		SPIx->DR = (uint16_t)*pTData++;
+		LL_SPI_TransmitData16(SPIx, *pTData++);
 		/* Wait for transmission to complete */
 		while (LL_SPI_IsActiveFlag_RXNE(SPIx) == RESET)
 			;
 		/* Return data from buffer */
 		if (pRData)
-			*pRData++ = (uint16_t)SPIx->DR;
+			*pRData++ = (uint16_t)LL_SPI_ReceiveData16(SPIx);
 		else
-			dummy = (uint16_t)SPIx->DR;
+			dummy = (uint16_t)LL_SPI_ReceiveData16(SPIx);
 	}
 	UNUSED(dummy);
 }
@@ -323,6 +329,7 @@ uint16_t spi_read16(SPI_TypeDef *SPIx)
 void spi_readMultiple16(SPI_TypeDef *SPIx, uint16_t *pRData, uint8_t pSize)
 {
 	/* SPI - 16 bits data */
+	LL_SPI_SetRxFIFOThreshold(SPIx, LL_SPI_RX_FIFO_TH_HALF);
 	LL_SPI_SetDataWidth(SPIx, LL_SPI_DATAWIDTH_16BIT);
 
 	while (pSize--)
@@ -330,12 +337,12 @@ void spi_readMultiple16(SPI_TypeDef *SPIx, uint16_t *pRData, uint8_t pSize)
 		while (LL_SPI_IsActiveFlag_TXE(SPIx) == RESET)
 			;
 		/* Fill output buffer with data */
-		SPIx->DR = (uint16_t)0xFFFF;
+		LL_SPI_TransmitData16(SPIx, 0xFFFF);
 		/* Wait for transmission to complete */
 		while (LL_SPI_IsActiveFlag_RXNE(SPIx) == RESET)
 			;
 		/* Return data from buffer */
-		*pRData++ = (uint16_t)SPIx->DR;
+		*pRData++ = (uint16_t)LL_SPI_ReceiveData16(SPIx);
 	}
 }
 
