@@ -10,7 +10,8 @@
     "modules": [
         "adc",
         "uart1",
-        "uart2"
+        "uart2",
+        "spi"
     ],
     "targets": [{
         "name": "stm32g070rb",
