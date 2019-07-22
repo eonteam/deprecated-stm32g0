@@ -33,18 +33,18 @@ void spi_init(SPI_TypeDef *SPIx, uint32_t freq_hz, uint32_t datamode, pin_t sck,
 
 	LL_RCC_GetSystemClocksFreq(&clocks);
 
+	_spi_src_clk = clocks.PCLK1_Frequency;
+
 #if defined(SPI1)
 	if (SPIx == SPI1)
 	{
-		SET_BIT(RCC->APB2ENR, RCC_APB2ENR_SPI1EN);
-		_spi_src_clk = clocks.PCLK2_Frequency;
+		LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SPI1);
 	}
 #endif
 #if defined(SPI2)
 	if (SPIx == SPI2)
 	{
-		SET_BIT(RCC->APB1ENR, RCC_APB1ENR_SPI2EN);
-		_spi_src_clk = clocks.PCLK1_Frequency;
+		LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_SPI2);
 	}
 #endif
 
