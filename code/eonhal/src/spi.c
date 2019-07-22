@@ -104,14 +104,7 @@ uint16_t spi_calculatePrescaler(SPI_TypeDef *SPIx, uint32_t freq_hz)
 
 	LL_RCC_GetSystemClocksFreq(&clocks);
 
-#ifdef SPI1
-	if (SPIx == SPI1)
-		_spi_src_clk = clocks.PCLK2_Frequency;
-#endif
-#ifdef SPI2
-	if (SPIx == SPI2)
-		_spi_src_clk = clocks.PCLK1_Frequency;
-#endif
+	_spi_src_clk = clocks.PCLK1_Frequency;
 
 	_spi_presc = _spi_src_clk / freq_hz;
 	if ((_spi_src_clk / _spi_presc) > freq_hz)
