@@ -151,9 +151,10 @@ void pwm_init500Hz(TIM_TypeDef *TIMx)
 	pwm_time_base.Autoreload = 999; /* 1000 - 1 */
 	pwm_time_base.Prescaler = (2 * timer_source_freq / 1000000) - 1;
 	LL_TIM_Init(TIMx, &pwm_time_base);
-	LL_TIM_SetClockSource(TIMx, LL_TIM_CLOCKSOURCE_INTERNAL);
-
 	LL_TIM_EnableARRPreload(TIMx);
+	LL_TIM_SetClockSource(TIMx, LL_TIM_CLOCKSOURCE_INTERNAL);
+	LL_TIM_SetTriggerOutput(TIMx, LL_TIM_TRGO_RESET);
+	LL_TIM_DisableMasterSlaveMode(TIMx);
 
 	LL_TIM_EnableCounter(TIMx);
 }
@@ -175,6 +176,8 @@ void pwm_pinEnable(pin_t pin)
 	pwm_output_compare.OCNState = LL_TIM_OCSTATE_DISABLE;
 	pwm_output_compare.CompareValue = 0;
 	LL_TIM_OC_Init(pin_map[pin].TIMx, pin_map[pin].timerCh, &pwm_output_compare);
+	LL_TIM_OC_DisableFast(pin_map[pin].TIMx, pin_map[pin].timerCh);
+	LL_TIM_OC_EnablePreload(pin_map[pin].TIMx, pin_map[pin].timerCh);
 	LL_TIM_CC_EnableChannel(pin_map[pin].TIMx, pin_map[pin].timerCh);
 }
 
