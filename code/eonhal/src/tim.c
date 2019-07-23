@@ -9,6 +9,7 @@
 */
 
 #include "tim.h"
+#include "stm32g0xx_ll_bus.h"
 #include "stm32g0xx_ll_rcc.h"
 
 /** 
