@@ -11,7 +11,8 @@
         "adc",
         "uart1",
         "uart2",
-        "spi"
+        "spi",
+        "i2c"
     ],
     "targets": [{
         "name": "stm32g070rb",
