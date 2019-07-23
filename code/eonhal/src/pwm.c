@@ -12,6 +12,7 @@
 #include "gpio.h"
 #include "tim.h"
 #include "pinmap_impl.h"
+#include "stm32g0xx_ll_bus.h"
 
 /** 
  ===============================================================================
