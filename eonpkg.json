@@ -13,7 +13,8 @@
         "uart2",
         "spi",
         "i2c",
-        "tim"
+        "tim",
+        "pwm"
     ],
     "targets": [{
         "name": "stm32g070rb",
