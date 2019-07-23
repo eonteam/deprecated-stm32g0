@@ -151,6 +151,7 @@ void tim_interrupt(TIM_TypeDef *TIMx, uint32_t prescaler, uint32_t period)
 	TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
 	TIM_InitStruct.Autoreload = 0;
 	TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
+	TIM_InitStruct.RepetitionCounter = 0;
 	LL_TIM_Init(TIMx, &TIM_InitStruct);
 
 	LL_TIM_SetClockSource(TIMx, LL_TIM_CLOCKSOURCE_INTERNAL);
@@ -175,6 +176,7 @@ void tim_interruptMs(TIM_TypeDef *TIMx, uint32_t ms)
 	TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
 	TIM_InitStruct.Autoreload = (timer_source_freq / 1000) - 1;
 	TIM_InitStruct.Prescaler = ms - 1;
+	TIM_InitStruct.RepetitionCounter = 0;
 	LL_TIM_Init(TIMx, &TIM_InitStruct);
 
 	LL_TIM_SetClockSource(TIMx, LL_TIM_CLOCKSOURCE_INTERNAL);
