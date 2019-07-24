@@ -30,6 +30,17 @@
 #define FLASH_KEY2 0xCDEF89ABU /*!< Flash key2: used with FLASH_KEY1 \ \
 																		to unlock the FLASH registers access */
 
+#if defined(FLASH_PCROP_SUPPORT)
+#define FLASH_FLAG_SR_ERROR             (FLASH_FLAG_OPERR  | FLASH_FLAG_PROGERR | FLASH_FLAG_WRPERR |  \
+                                         FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR  | FLASH_FLAG_PGSERR |   \
+                                         FLASH_FLAG_MISERR | FLASH_FLAG_FASTERR | FLASH_FLAG_RDERR |   \
+                                         FLASH_FLAG_OPTVERR)     /*!< All SR error flags */
+#else
+#define FLASH_FLAG_SR_ERROR             (FLASH_FLAG_OPERR  | FLASH_FLAG_PROGERR | FLASH_FLAG_WRPERR |  \
+                                         FLASH_FLAG_PGAERR | FLASH_FLAG_SIZERR  | FLASH_FLAG_PGSERR |   \
+                                         FLASH_FLAG_MISERR | FLASH_FLAG_FASTERR |   \
+                                         FLASH_FLAG_OPTVERR)     /*!< All SR error flags */
+#endif
 #define FLASH_FLAG_BSY                  FLASH_SR_BSY1     /*!< FLASH Operation Busy flag */
 #define FLASH_FLAG_CFGBSY               FLASH_SR_CFGBSY   /*!< FLASH Configuration Busy flag */
 #define FLASH_FLAG_ECCC                 FLASH_ECCR_ECCC   /*!< FLASH ECC correction */
@@ -68,7 +79,7 @@ static uint8_t _waitForLastOperation(uint32_t timeout)
   /* clear error flags */
   __HAL_FLASH_CLEAR_FLAG(error);
 
-	exit_time = millis() + Timeout;
+	exit_time = millis() + timeout;
 
   while (__HAL_FLASH_GET_FLAG(FLASH_FLAG_CFGBSY) != 0x00U)
   {
