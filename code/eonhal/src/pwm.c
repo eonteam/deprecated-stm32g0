@@ -196,7 +196,7 @@ void pwm_init500Hz(TIM_TypeDef *TIMx)
 
 void pwm_pinEnable(pin_t pin)
 {
-	LL_TIM_OC_InitTypeDef pwm_output_compare;
+	LL_TIM_OC_InitTypeDef pwm_output_compare = {0};
 	STM32_Pin_Info *pin_map = HAL_Pin_Map();
 	gpio_modePWM(pin);
 	pwm_output_compare.OCMode = LL_TIM_OCMODE_PWM1;
