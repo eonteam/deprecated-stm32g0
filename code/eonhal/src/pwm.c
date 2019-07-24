@@ -103,6 +103,7 @@ static void pwm_enableTim(TIM_TypeDef *TIMx)
 
 void pwm_init(TIM_TypeDef *TIMx, uint32_t prescaler, uint32_t period)
 {
+	LL_TIM_BDTR_InitTypeDef TIM_BDTRInitStruct = {0};
 	LL_TIM_InitTypeDef pwm_time_base;
 
 	pwm_enableTim(TIMx);
@@ -112,8 +113,17 @@ void pwm_init(TIM_TypeDef *TIMx, uint32_t prescaler, uint32_t period)
 	pwm_time_base.Prescaler = prescaler - 1;
 	LL_TIM_Init(TIMx, &pwm_time_base);
 	LL_TIM_SetClockSource(TIMx, LL_TIM_CLOCKSOURCE_INTERNAL);
-
 	LL_TIM_EnableARRPreload(TIMx);
+
+	TIM_BDTRInitStruct.OSSRState = LL_TIM_OSSR_ENABLE;
+	TIM_BDTRInitStruct.OSSIState = LL_TIM_OSSI_ENABLE;
+	TIM_BDTRInitStruct.LockLevel = LL_TIM_LOCKLEVEL_OFF;
+	TIM_BDTRInitStruct.DeadTime = 0;
+	TIM_BDTRInitStruct.BreakState = LL_TIM_BREAK_DISABLE;
+	TIM_BDTRInitStruct.BreakPolarity = LL_TIM_BREAK_POLARITY_HIGH;
+	TIM_BDTRInitStruct.BreakFilter = LL_TIM_BREAK_FILTER_FDIV1;
+	TIM_BDTRInitStruct.AutomaticOutput = LL_TIM_AUTOMATICOUTPUT_ENABLE;
+	LL_TIM_BDTR_Init(TIMx, &TIM_BDTRInitStruct);
 
 	LL_TIM_EnableCounter(TIMx);
 }
@@ -121,6 +131,7 @@ void pwm_init(TIM_TypeDef *TIMx, uint32_t prescaler, uint32_t period)
 void pwm_init1KHz(TIM_TypeDef *TIMx)
 {
 	uint32_t timer_source_freq;
+	LL_TIM_BDTR_InitTypeDef TIM_BDTRInitStruct = {0};
 	LL_TIM_InitTypeDef pwm_time_base;
 
 	timer_source_freq = tim_getSrcClk(TIMx);
@@ -132,8 +143,17 @@ void pwm_init1KHz(TIM_TypeDef *TIMx)
 	pwm_time_base.Prescaler = (timer_source_freq / 1000000) - 1;
 	LL_TIM_Init(TIMx, &pwm_time_base);
 	LL_TIM_SetClockSource(TIMx, LL_TIM_CLOCKSOURCE_INTERNAL);
-
 	LL_TIM_EnableARRPreload(TIMx);
+
+	TIM_BDTRInitStruct.OSSRState = LL_TIM_OSSR_ENABLE;
+	TIM_BDTRInitStruct.OSSIState = LL_TIM_OSSI_ENABLE;
+	TIM_BDTRInitStruct.LockLevel = LL_TIM_LOCKLEVEL_OFF;
+	TIM_BDTRInitStruct.DeadTime = 0;
+	TIM_BDTRInitStruct.BreakState = LL_TIM_BREAK_DISABLE;
+	TIM_BDTRInitStruct.BreakPolarity = LL_TIM_BREAK_POLARITY_HIGH;
+	TIM_BDTRInitStruct.BreakFilter = LL_TIM_BREAK_FILTER_FDIV1;
+	TIM_BDTRInitStruct.AutomaticOutput = LL_TIM_AUTOMATICOUTPUT_ENABLE;
+	LL_TIM_BDTR_Init(TIMx, &TIM_BDTRInitStruct);
 
 	LL_TIM_EnableCounter(TIMx);
 }
@@ -141,6 +161,7 @@ void pwm_init1KHz(TIM_TypeDef *TIMx)
 void pwm_init500Hz(TIM_TypeDef *TIMx)
 {
 	uint32_t timer_source_freq;
+	LL_TIM_BDTR_InitTypeDef TIM_BDTRInitStruct = {0};
 	LL_TIM_InitTypeDef pwm_time_base;
 
 	timer_source_freq = tim_getSrcClk(TIMx);
@@ -151,10 +172,18 @@ void pwm_init500Hz(TIM_TypeDef *TIMx)
 	pwm_time_base.Autoreload = 999; /* 1000 - 1 */
 	pwm_time_base.Prescaler = (2 * timer_source_freq / 1000000) - 1;
 	LL_TIM_Init(TIMx, &pwm_time_base);
-	LL_TIM_EnableARRPreload(TIMx);
 	LL_TIM_SetClockSource(TIMx, LL_TIM_CLOCKSOURCE_INTERNAL);
-	LL_TIM_SetTriggerOutput(TIMx, LL_TIM_TRGO_RESET);
-	LL_TIM_DisableMasterSlaveMode(TIMx);
+	LL_TIM_EnableARRPreload(TIMx);
+
+	TIM_BDTRInitStruct.OSSRState = LL_TIM_OSSR_ENABLE;
+	TIM_BDTRInitStruct.OSSIState = LL_TIM_OSSI_ENABLE;
+	TIM_BDTRInitStruct.LockLevel = LL_TIM_LOCKLEVEL_OFF;
+	TIM_BDTRInitStruct.DeadTime = 0;
+	TIM_BDTRInitStruct.BreakState = LL_TIM_BREAK_DISABLE;
+	TIM_BDTRInitStruct.BreakPolarity = LL_TIM_BREAK_POLARITY_HIGH;
+	TIM_BDTRInitStruct.BreakFilter = LL_TIM_BREAK_FILTER_FDIV1;
+	TIM_BDTRInitStruct.AutomaticOutput = LL_TIM_AUTOMATICOUTPUT_ENABLE;
+	LL_TIM_BDTR_Init(TIMx, &TIM_BDTRInitStruct);
 
 	LL_TIM_EnableCounter(TIMx);
 }
