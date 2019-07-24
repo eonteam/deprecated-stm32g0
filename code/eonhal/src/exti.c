@@ -92,26 +92,26 @@ static uint32_t get_exticfg_line(uint32_t ll_pin)
 		plus_bit = 0U;
 
 	if ((ll_pin &
-			 (LL_GPIO_PIN_0 || LL_GPIO_PIN_4 ||
-				LL_GPIO_PIN_8 || LL_GPIO_PIN_12)) != 0)
+			 (LL_GPIO_PIN_0 | LL_GPIO_PIN_4 |
+				LL_GPIO_PIN_8 | LL_GPIO_PIN_12)) != 0)
 	{
 		return (LL_EXTI_CONFIG_LINE0 | plus_bit);
 	}
 	else if ((ll_pin &
-						(LL_GPIO_PIN_1 || LL_GPIO_PIN_5 ||
-						 LL_GPIO_PIN_9 || LL_GPIO_PIN_13)) != 0)
+						(LL_GPIO_PIN_1 | LL_GPIO_PIN_5 |
+						 LL_GPIO_PIN_9 | LL_GPIO_PIN_13)) != 0)
 	{
 		return (LL_EXTI_CONFIG_LINE1 | plus_bit);
 	}
 	else if ((ll_pin &
-						(LL_GPIO_PIN_2 || LL_GPIO_PIN_6 ||
-						 LL_GPIO_PIN_10 || LL_GPIO_PIN_14)) != 0)
+						(LL_GPIO_PIN_2 | LL_GPIO_PIN_6 |
+						 LL_GPIO_PIN_10 | LL_GPIO_PIN_14)) != 0)
 	{
 		return (LL_EXTI_CONFIG_LINE2 | plus_bit);
 	}
 	else if ((ll_pin &
-						(LL_GPIO_PIN_3 || LL_GPIO_PIN_7 ||
-						 LL_GPIO_PIN_11 || LL_GPIO_PIN_15)) != 0)
+						(LL_GPIO_PIN_3 | LL_GPIO_PIN_7 |
+						 LL_GPIO_PIN_11 | LL_GPIO_PIN_15)) != 0)
 	{
 		return (LL_EXTI_CONFIG_LINE3 | plus_bit);
 	}
