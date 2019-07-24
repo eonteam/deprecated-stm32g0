@@ -14,7 +14,8 @@
         "spi",
         "i2c",
         "tim",
-        "pwm"
+        "pwm",
+        "exti"
     ],
     "targets": [{
         "name": "stm32g070rb",
