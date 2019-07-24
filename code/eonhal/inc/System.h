@@ -170,6 +170,7 @@ extern "C"
 	uint8_t eeprom_writeByte(uint32_t address, uint8_t data);
 	uint8_t eeprom_writeHalfWord(uint32_t address, uint16_t data);
 	uint8_t eeprom_writeWord(uint32_t address, uint32_t data);
+	uint8_t eeprom_writeDWord(uint32_t address, uint64_t data);
 	uint8_t eeprom_writeFloat(uint32_t address, float *data);
 	uint8_t eeprom_readByte(uint32_t address);
 	uint16_t eeprom_readHalfWord(uint32_t address);
