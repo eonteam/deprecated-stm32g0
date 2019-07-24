@@ -167,6 +167,7 @@ extern "C"
 	// OJO: PADDING = 4 bytes
 	void eeprom_unlock(void);
 	void eeprom_lock(void);
+	uint8_t eeprom_massErase(void);
 	uint8_t eeprom_writeByte(uint32_t address, uint8_t data);
 	uint8_t eeprom_writeHalfWord(uint32_t address, uint16_t data);
 	uint8_t eeprom_writeWord(uint32_t address, uint32_t data);
