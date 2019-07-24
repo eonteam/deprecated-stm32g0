@@ -10,7 +10,6 @@
 
 #include "exti.h"
 #include "gpio.h"
-#include "stm32l0xx_ll_exti.h"
 #include "pinmap_impl.h"
 
 #if !defined(GPIO_GET_INDEX)
