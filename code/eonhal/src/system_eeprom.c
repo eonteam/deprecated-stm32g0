@@ -125,11 +125,6 @@ static void _program_doubleWord(uint32_t Address, uint64_t Data)
   *(uint32_t *)(Address + 4U) = (uint32_t)(Data >> 32U);
 }
 
-static uint32_t _getPage(uint32_t Addr)
-{
-  return (Addr - FLASH_BASE) / FLASH_PAGE_SIZE;
-}
-
 /** 
  ===============================================================================
               ##### Public functions #####
