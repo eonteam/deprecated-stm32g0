@@ -21,7 +21,7 @@
 #define FLASH_PAGE_SIZE	0x800u
 
 #define DATA_EEPROM_END		(uint32_t)((FLASH_BASE) + (LL_GetFlashSize()*1024) - 1)
-#define DATA_EEPROM_BASE	(uint32_t)((DATA_EEPROM_END) - FLASH_PAGE_SIZE)
+#define DATA_EEPROM_BASE	(uint32_t)((DATA_EEPROM_END) - FLASH_PAGE_SIZE + 1)
 
 #define FLASH_TYPEPROGRAM_DOUBLEWORD    FLASH_CR_PG     /*!< Program a double-word (64-bit) at a specified address */
 #define FLASH_TYPEPROGRAM_FAST          FLASH_CR_FSTPG  /*!< Fast program a 32 row double-word (64-bit) at a specified address */
@@ -125,6 +125,11 @@ static void _program_doubleWord(uint32_t Address, uint64_t Data)
   *(uint32_t *)(Address + 4U) = (uint32_t)(Data >> 32U);
 }
 
+static uint32_t _getPage(uint32_t Addr)
+{
+  return (Addr - FLASH_BASE) / FLASH_PAGE_SIZE;
+}
+
 /** 
  ===============================================================================
               ##### Public functions #####
@@ -155,6 +160,21 @@ uint8_t eeprom_writeDWord(uint32_t address, uint64_t data){
 	_program_doubleWord(address, data);
 	status = _waitForLastOperation(FLASH_TIMEOUT_VALUE);
 	CLEAR_BIT(FLASH->CR, FLASH_TYPEPROGRAM_DOUBLEWORD);
+	return status;
+}
+
+uint8_t eeprom_massErase(void){
+	uint8_t status = 0;
+	uint32_t tmp;
+	uint32_t ee_page = (uint32_t)(((LL_GetFlashSize() * 1024)/FLASH_PAGE_SIZE) - 1);
+	eeprom_unlock();
+	status = _waitForLastOperation(FLASH_TIMEOUT_VALUE);
+	if(status == 0) { return 0; }
+	tmp = (FLASH->CR & ~FLASH_CR_PNB);
+  FLASH->CR = (tmp | (FLASH_CR_STRT | (ee_page <<  FLASH_CR_PNB_Pos) | FLASH_CR_PER));
+	status = _waitForLastOperation(FLASH_TIMEOUT_VALUE);
+	CLEAR_BIT(FLASH->CR, FLASH_CR_PER);
+	eeprom_lock();
 	return status;
 }
 
