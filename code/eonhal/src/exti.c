@@ -28,7 +28,7 @@
 static uint32_t get_exticfg_port_enclk(GPIO_TypeDef *GPIOx, uint8_t enclk)
 {
 #ifdef GPIOA
-	if (pin_map[pin].GPIOx == GPIOA)
+	if (GPIOx == GPIOA)
 	{
 		if (enclk)
 			SET_BIT(RCC->IOPENR, RCC_IOPENR_GPIOAEN);
@@ -36,7 +36,7 @@ static uint32_t get_exticfg_port_enclk(GPIO_TypeDef *GPIOx, uint8_t enclk)
 	}
 #endif
 #ifdef GPIOB
-	if (pin_map[pin].GPIOx == GPIOB)
+	if (GPIOx == GPIOB)
 	{
 		if (enclk)
 			SET_BIT(RCC->IOPENR, RCC_IOPENR_GPIOBEN);
@@ -44,7 +44,7 @@ static uint32_t get_exticfg_port_enclk(GPIO_TypeDef *GPIOx, uint8_t enclk)
 	}
 #endif
 #ifdef GPIOC
-	if (pin_map[pin].GPIOx == GPIOC)
+	if (GPIOx == GPIOC)
 	{
 		if (enclk)
 			SET_BIT(RCC->IOPENR, RCC_IOPENR_GPIOCEN);
@@ -52,7 +52,7 @@ static uint32_t get_exticfg_port_enclk(GPIO_TypeDef *GPIOx, uint8_t enclk)
 	}
 #endif
 #ifdef GPIOD
-	if (pin_map[pin].GPIOx == GPIOD)
+	if (GPIOx == GPIOD)
 	{
 		if (enclk)
 			SET_BIT(RCC->IOPENR, RCC_IOPENR_GPIODEN);
@@ -60,7 +60,7 @@ static uint32_t get_exticfg_port_enclk(GPIO_TypeDef *GPIOx, uint8_t enclk)
 	}
 #endif
 #ifdef GPIOE
-	if (pin_map[pin].GPIOx == GPIOE)
+	if (GPIOx == GPIOE)
 	{
 		if (enclk)
 			SET_BIT(RCC->IOPENR, RCC_IOPENR_GPIOEEN);
@@ -68,13 +68,14 @@ static uint32_t get_exticfg_port_enclk(GPIO_TypeDef *GPIOx, uint8_t enclk)
 	}
 #endif
 #ifdef GPIOF
-	if (pin_map[pin].GPIOx == GPIOF)
+	if (GPIOx == GPIOF)
 	{
 		if (enclk)
 			SET_BIT(RCC->IOPENR, RCC_IOPENR_GPIOFEN);
 		return LL_EXTI_CONFIG_PORTF;
 	}
 #endif
+	return 0;
 }
 
 static uint32_t get_exticfg_line(uint32_t ll_pin)
@@ -103,6 +104,7 @@ static uint32_t get_exticfg_line(uint32_t ll_pin)
 	{
 		return LL_EXTI_CONFIG_LINE3;
 	}
+	return 0;
 }
 
 static uint32_t GPIO_EXTIConfig(pin_t pin, uint8_t exti_mode, pull_t pull)
@@ -188,7 +190,7 @@ void exti_detach(uint16_t pin)
 void exti_softTrigger(pin_t pin)
 {
 	STM32_Pin_Info *pin_map = HAL_Pin_Map();
-	LL_EXTI_GenerateSWI_0_31(pin_map[pin].pin)
+	LL_EXTI_GenerateSWI_0_31(pin_map[pin].pin);
 }
 
 /** 
