@@ -359,7 +359,7 @@ void EXTI0_1_IRQHandler(void)
 			(LL_EXTI_IsActiveRisingFlag_0_31(LL_GPIO_PIN_0) != 0))
 	{
 		LL_EXTI_ClearRisingFlag_0_31(LL_GPIO_PIN_0);
-		L_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_0);
+		LL_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_0);
 		__EXTI0();
 	}
 #endif
@@ -368,7 +368,7 @@ void EXTI0_1_IRQHandler(void)
 			(LL_EXTI_IsActiveRisingFlag_0_31(LL_GPIO_PIN_1) != 0))
 	{
 		LL_EXTI_ClearRisingFlag_0_31(LL_GPIO_PIN_1);
-		L_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_1);
+		LL_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_1);
 		__EXTI1();
 	}
 #endif
@@ -383,7 +383,7 @@ void EXTI2_3_IRQHandler(void)
 			(LL_EXTI_IsActiveRisingFlag_0_31(LL_GPIO_PIN_2) != 0))
 	{
 		LL_EXTI_ClearRisingFlag_0_31(LL_GPIO_PIN_2);
-		L_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_2);
+		LL_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_2);
 		__EXTI2();
 	}
 #endif
@@ -392,7 +392,7 @@ void EXTI2_3_IRQHandler(void)
 			(LL_EXTI_IsActiveRisingFlag_0_31(LL_GPIO_PIN_3) != 0))
 	{
 		LL_EXTI_ClearRisingFlag_0_31(LL_GPIO_PIN_3);
-		L_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_3);
+		LL_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_3);
 		__EXTI3();
 	}
 #endif
@@ -407,7 +407,7 @@ void EXTI4_15_IRQHandler(void)
 			(LL_EXTI_IsActiveRisingFlag_0_31(LL_GPIO_PIN_4) != 0))
 	{
 		LL_EXTI_ClearRisingFlag_0_31(LL_GPIO_PIN_4);
-		L_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_4);
+		LL_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_4);
 		__EXTI4();
 	}
 #endif
@@ -416,7 +416,7 @@ void EXTI4_15_IRQHandler(void)
 			(LL_EXTI_IsActiveRisingFlag_0_31(LL_GPIO_PIN_5) != 0))
 	{
 		LL_EXTI_ClearRisingFlag_0_31(LL_GPIO_PIN_5);
-		L_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_5);
+		LL_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_5);
 		__EXTI5();
 	}
 #endif
@@ -425,7 +425,7 @@ void EXTI4_15_IRQHandler(void)
 			(LL_EXTI_IsActiveRisingFlag_0_31(LL_GPIO_PIN_6) != 0))
 	{
 		LL_EXTI_ClearRisingFlag_0_31(LL_GPIO_PIN_6);
-		L_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_6);
+		LL_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_6);
 		__EXTI6();
 	}
 #endif
@@ -434,7 +434,7 @@ void EXTI4_15_IRQHandler(void)
 			(LL_EXTI_IsActiveRisingFlag_0_31(LL_GPIO_PIN_7) != 0))
 	{
 		LL_EXTI_ClearRisingFlag_0_31(LL_GPIO_PIN_7);
-		L_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_7);
+		LL_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_7);
 		__EXTI7();
 	}
 #endif
@@ -443,7 +443,7 @@ void EXTI4_15_IRQHandler(void)
 			(LL_EXTI_IsActiveRisingFlag_0_31(LL_GPIO_PIN_8) != 0))
 	{
 		LL_EXTI_ClearRisingFlag_0_31(LL_GPIO_PIN_8);
-		L_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_8);
+		LL_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_8);
 		__EXTI8();
 	}
 #endif
@@ -452,7 +452,7 @@ void EXTI4_15_IRQHandler(void)
 			(LL_EXTI_IsActiveRisingFlag_0_31(LL_GPIO_PIN_9) != 0))
 	{
 		LL_EXTI_ClearRisingFlag_0_31(LL_GPIO_PIN_9);
-		L_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_9);
+		LL_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_9);
 		__EXTI9();
 	}
 #endif
@@ -461,7 +461,7 @@ void EXTI4_15_IRQHandler(void)
 			(LL_EXTI_IsActiveRisingFlag_0_31(LL_GPIO_PIN_10) != 0))
 	{
 		LL_EXTI_ClearRisingFlag_0_31(LL_GPIO_PIN_10);
-		L_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_10);
+		LL_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_10);
 		__EXTI10();
 	}
 #endif
@@ -470,7 +470,7 @@ void EXTI4_15_IRQHandler(void)
 			(LL_EXTI_IsActiveRisingFlag_0_31(LL_GPIO_PIN_11) != 0))
 	{
 		LL_EXTI_ClearRisingFlag_0_31(LL_GPIO_PIN_11);
-		L_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_11);
+		LL_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_11);
 		__EXTI11();
 	}
 #endif
@@ -479,7 +479,7 @@ void EXTI4_15_IRQHandler(void)
 			(LL_EXTI_IsActiveRisingFlag_0_31(LL_GPIO_PIN_12) != 0))
 	{
 		LL_EXTI_ClearRisingFlag_0_31(LL_GPIO_PIN_12);
-		L_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_12);
+		LL_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_12);
 		__EXTI12();
 	}
 #endif
@@ -488,7 +488,7 @@ void EXTI4_15_IRQHandler(void)
 			(LL_EXTI_IsActiveRisingFlag_0_31(LL_GPIO_PIN_13) != 0))
 	{
 		LL_EXTI_ClearRisingFlag_0_31(LL_GPIO_PIN_13);
-		L_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_13);
+		LL_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_13);
 		__EXTI13();
 	}
 #endif
@@ -497,7 +497,7 @@ void EXTI4_15_IRQHandler(void)
 			(LL_EXTI_IsActiveRisingFlag_0_31(LL_GPIO_PIN_14) != 0))
 	{
 		LL_EXTI_ClearRisingFlag_0_31(LL_GPIO_PIN_14);
-		L_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_14);
+		LL_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_14);
 		__EXTI14();
 	}
 #endif
@@ -506,7 +506,7 @@ void EXTI4_15_IRQHandler(void)
 			(LL_EXTI_IsActiveRisingFlag_0_31(LL_GPIO_PIN_15) != 0))
 	{
 		LL_EXTI_ClearRisingFlag_0_31(LL_GPIO_PIN_15);
-		L_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_15);
+		LL_EXTI_ClearFallingFlag_0_31(LL_GPIO_PIN_15);
 		__EXTI15();
 	}
 #endif
