@@ -118,7 +118,7 @@ static uint32_t get_exticfg_line(uint32_t ll_pin)
 	return 0;
 }
 
-static uint32_t GPIO_EXTIConfig(pin_t pin, uint8_t exti_mode, pull_t pull)
+static IRQn_Type GPIO_EXTIConfig(pin_t pin, uint8_t exti_mode, pull_t pull)
 {
 	uint32_t exticfgPort = 0x00;
 	uint32_t exticfgLine = 0x00;
@@ -139,11 +139,11 @@ static uint32_t GPIO_EXTIConfig(pin_t pin, uint8_t exti_mode, pull_t pull)
 	EXTI_InitStruct.Trigger = exti_mode;
 	LL_EXTI_Init(&EXTI_InitStruct);
 
-	if (pin_map[0].pin >= LL_GPIO_PIN_4)
+	if (pin_map[pin].pin >= LL_GPIO_PIN_4)
 	{
 		return EXTI4_15_IRQn;
 	}
-	else if (pin_map[0].pin >= LL_GPIO_PIN_2)
+	else if (pin_map[pin].pin >= LL_GPIO_PIN_2)
 	{
 		return EXTI2_3_IRQn;
 	}
@@ -161,7 +161,7 @@ static uint32_t GPIO_EXTIConfig(pin_t pin, uint8_t exti_mode, pull_t pull)
 
 void exti_attach(pin_t pin, pull_t pull, uint8_t exti_mode)
 {
-	uint32_t gpio_irqn = 0;
+	IRQn_Type gpio_irqn = 0;
 
 	gpio_irqn = GPIO_EXTIConfig(pin, exti_mode, pull);
 
@@ -171,7 +171,7 @@ void exti_attach(pin_t pin, pull_t pull, uint8_t exti_mode)
 
 void exti_attachPriority(pin_t pin, pull_t pull, uint8_t priority, uint8_t exti_mode)
 {
-	uint32_t gpio_irqn = 0;
+	IRQn_Type gpio_irqn = 0;
 
 	gpio_irqn = GPIO_EXTIConfig(pin, exti_mode, pull);
 
