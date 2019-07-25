@@ -172,6 +172,7 @@ void system_stop1Seconds(uint32_t seconds)
 	LL_SYSTICK_DisableIT();
 	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 	rtc_setAlarmBAfter(seconds);
+	LL_PWR_EnableLowPowerRunMode();
 	LL_PWR_SetPowerMode(LL_PWR_MODE_STOP1);
 	LL_LPM_EnableDeepSleep();
 	__WFI();
@@ -219,7 +220,6 @@ void system_standby(void)
 	}
 	LL_SYSTICK_DisableIT();
 	LL_PWR_ClearFlag_WU();
-	LL_RCC_ClearResetFlags(); // TODO: is it necessary?
 #if defined(PWR_CR3_RRS)
 	LL_PWR_DisableSRAMRetention();
 #endif
@@ -240,7 +240,6 @@ void system_standbySeconds(uint32_t seconds)
 	__disable_irq();
 	LL_SYSTICK_DisableIT();
 	LL_PWR_ClearFlag_WU();
-	LL_RCC_ClearResetFlags(); // TODO: is it necessary?
 	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 	rtc_setAlarmBAfter(seconds);
 #if defined(PWR_CR3_RRS)
@@ -264,7 +263,6 @@ void system_standbyUntilWakeUpPin(uint32_t WAKEUP_PIN_x, uint8_t polarity)
 	LL_SYSTICK_DisableIT();
 	LL_PWR_DisableWakeUpPin(WAKEUP_PIN_x);
 	LL_PWR_ClearFlag_WU();
-	LL_RCC_ClearResetFlags(); // TODO: is it necessary?
 	if (polarity)
 	{
 		LL_PWR_SetWakeUpPinPolarityHigh(WAKEUP_PIN_x);
@@ -299,7 +297,6 @@ void system_standbySRAM(void)
 	}
 	LL_SYSTICK_DisableIT();
 	LL_PWR_ClearFlag_WU();
-	LL_RCC_ClearResetFlags(); // TODO: is it necessary?
 	LL_PWR_EnableSRAMRetention();
 	LL_PWR_SetPowerMode(LL_PWR_MODE_STANDBY);
 	LL_LPM_EnableDeepSleep();
@@ -318,7 +315,6 @@ void system_standbySRAMSeconds(uint32_t seconds)
 	__disable_irq();
 	LL_SYSTICK_DisableIT();
 	LL_PWR_ClearFlag_WU();
-	LL_RCC_ClearResetFlags(); // TODO: is it necessary?
 	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 	rtc_setAlarmBAfter(seconds);
 	LL_PWR_EnableSRAMRetention();
@@ -340,7 +336,6 @@ void system_standbySRAMUntilWakeUpPin(uint32_t WAKEUP_PIN_x, uint8_t polarity)
 	LL_SYSTICK_DisableIT();
 	LL_PWR_DisableWakeUpPin(WAKEUP_PIN_x);
 	LL_PWR_ClearFlag_WU();
-	LL_RCC_ClearResetFlags(); // TODO: is it necessary?
 	if (polarity)
 	{
 		LL_PWR_SetWakeUpPinPolarityHigh(WAKEUP_PIN_x);
@@ -375,7 +370,6 @@ void system_shutdown(void)
 	}
 	LL_SYSTICK_DisableIT();
 	LL_PWR_ClearFlag_WU();
-	LL_RCC_ClearResetFlags(); // TODO: is it necessary?
 	LL_PWR_SetPowerMode(LL_PWR_MODE_SHUTDOWN);
 	LL_LPM_EnableDeepSleep();
 #if defined(__CC_ARM)
@@ -393,7 +387,6 @@ void system_shutdownSeconds(uint32_t seconds)
 	__disable_irq();
 	LL_SYSTICK_DisableIT();
 	LL_PWR_ClearFlag_WU();
-	LL_RCC_ClearResetFlags(); // TODO: is it necessary?
 	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 	rtc_setAlarmBAfter(seconds);
 	LL_PWR_SetPowerMode(LL_PWR_MODE_SHUTDOWN);
@@ -414,7 +407,6 @@ void system_shutdownUntilWakeUpPin(uint32_t WAKEUP_PIN_x, uint8_t polarity)
 	LL_SYSTICK_DisableIT();
 	LL_PWR_DisableWakeUpPin(WAKEUP_PIN_x);
 	LL_PWR_ClearFlag_WU();
-	LL_RCC_ClearResetFlags(); // TODO: is it necessary?
 	if (polarity)
 	{
 		LL_PWR_SetWakeUpPinPolarityHigh(WAKEUP_PIN_x);
