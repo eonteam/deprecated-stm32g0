@@ -187,8 +187,8 @@ extern "C"
 #endif
 #if defined(PWR_CR1_LPMS_2)
 	void system_shutdown(void);
-	void system_shutdownSeconds(void);
-	void system_shutdownUntilWakeUpPin(void);
+	void system_shutdownSeconds(uint32_t seconds);
+	void system_shutdownUntilWakeUpPin(uint32_t WAKEUP_PIN_x, uint8_t polarity); // This function doesn't required rtc
 #endif
 
 	/* Virtual EEPROM Functions *********************************/
