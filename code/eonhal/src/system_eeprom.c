@@ -174,6 +174,7 @@ static uint8_t _eeprom_writeDWord(uint32_t address, uint64_t data){
 
 void veeprom_init(void){
 	uint16_t index = 0;
+	uint32_t data32;
 	uint32_t address = DATA_EEPROM_BASE;
 
 	while (address < (DATA_EEPROM_END))
