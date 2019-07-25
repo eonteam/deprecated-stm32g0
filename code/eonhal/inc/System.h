@@ -165,7 +165,6 @@ extern "C"
 
 	/* Virtual EEPROM Functions *********************************/
 	void veeprom_init(void);
-	uint8_t veeprom_massErase(void);
 	uint8_t veeprom_writeByte(uint16_t address, uint8_t data);
 	uint8_t veeprom_writeHalfWord(uint16_t address, uint16_t data);
 	uint8_t veeprom_writeWord(uint16_t address, uint32_t data);
@@ -175,6 +174,7 @@ extern "C"
 	uint32_t veeprom_readWord(uint16_t address);
 	void veeprom_readFloat(uint16_t address, float *rdata);
 	void veeprom_commit(void);
+	void veeprom_clear(void);
 
 #ifdef __cplusplus
 }
