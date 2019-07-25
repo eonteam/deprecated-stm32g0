@@ -23,6 +23,7 @@
 #include "stm32g0xx_ll_rtc.h"
 #include "stm32g0xx_ll_exti.h"
 #include "unix_time.h"
+#include "pinmap_hal.h"
 
 #ifdef __cplusplus
 extern "C"
