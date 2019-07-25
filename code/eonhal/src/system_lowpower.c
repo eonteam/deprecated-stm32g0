@@ -172,7 +172,6 @@ void system_stop1Seconds(uint32_t seconds)
 	LL_SYSTICK_DisableIT();
 	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 	rtc_setAlarmBAfter(seconds);
-	LL_PWR_EnableLowPowerRunMode();
 	LL_PWR_SetPowerMode(LL_PWR_MODE_STOP1);
 	LL_LPM_EnableDeepSleep();
 	__WFI();
