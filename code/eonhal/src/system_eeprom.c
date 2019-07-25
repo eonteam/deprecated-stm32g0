@@ -22,6 +22,7 @@
 
 #define DATA_EEPROM_END		(uint32_t)((FLASH_BASE) + (LL_GetFlashSize()*1024) - 1)
 #define DATA_EEPROM_BASE	(uint32_t)((DATA_EEPROM_END) - FLASH_PAGE_SIZE + 1)
+#define DATA_EEPROM_SIZE 	512 // in bytes
 
 #define FLASH_TYPEPROGRAM_DOUBLEWORD    FLASH_CR_PG     /*!< Program a double-word (64-bit) at a specified address */
 #define FLASH_TYPEPROGRAM_FAST          FLASH_CR_FSTPG  /*!< Fast program a 32 row double-word (64-bit) at a specified address */
@@ -70,6 +71,19 @@
 #define __HAL_FLASH_CLEAR_FLAG(__FLAG__)        do { if(((__FLAG__) & (FLASH_FLAG_ECCC | FLASH_FLAG_ECCD)) != 0U) { SET_BIT(FLASH->ECCR, ((__FLAG__) & (FLASH_FLAG_ECCC | FLASH_FLAG_ECCD))); }\
                                                      if(((__FLAG__) & ~(FLASH_FLAG_ECCC | FLASH_FLAG_ECCD)) != 0U) { WRITE_REG(FLASH->SR, ((__FLAG__) & ~(FLASH_FLAG_ECCC | FLASH_FLAG_ECCD))); }\
                                                    } while(0U)
+
+/** 
+ ===============================================================================
+              ##### Static array #####
+ ===============================================================================
+ */
+
+static uint8_t _eedata[DATA_EEPROM_SIZE];
+
+typedef union{
+	uint8_t u8[8];
+	uint64_t u64;
+}eedata_t;
 
 /** 
  ===============================================================================
@@ -125,13 +139,7 @@ static void _program_doubleWord(uint32_t Address, uint64_t Data)
   *(uint32_t *)(Address + 4U) = (uint32_t)(Data >> 32U);
 }
 
-/** 
- ===============================================================================
-              ##### Public functions #####
- ===============================================================================
- */
-
-void eeprom_unlock(void)
+static void _eeprom_unlock(void)
 {
 	if (READ_BIT(FLASH->CR, FLASH_CR_LOCK) != 0x00U)
 	{
@@ -141,12 +149,12 @@ void eeprom_unlock(void)
 	}
 }
 
-void eeprom_lock(void)
+static void _eeprom_lock(void)
 {
 	SET_BIT(FLASH->CR, FLASH_CR_LOCK);
 }
 
-uint8_t eeprom_writeDWord(uint32_t address, uint64_t data){
+static uint8_t _eeprom_writeDWord(uint32_t address, uint64_t data){
 	uint8_t status = 0;
 	address = DATA_EEPROM_BASE + address;
 	if(address > DATA_EEPROM_END) { return 0; }
@@ -158,111 +166,115 @@ uint8_t eeprom_writeDWord(uint32_t address, uint64_t data){
 	return status;
 }
 
-uint8_t eeprom_massErase(void){
+/** 
+ ===============================================================================
+              ##### Public functions #####
+ ===============================================================================
+ */
+
+void veeprom_init(void){
+	uint16_t index = 0;
+	uint32_t address = DATA_EEPROM_BASE;
+
+	while (address < (DATA_EEPROM_END))
+  {
+		index = address - DATA_EEPROM_BASE;
+    data32 = *(__IO uint32_t *)address;
+		_eedata[index] = (uint8_t)data32;
+		_eedata[index+1] = (uint8_t)(data32 >> 8U);
+		_eedata[index+2] = (uint8_t)(data32 >> 16U);
+		_eedata[index+3] = (uint8_t)(data32 >> 24U);
+    address = address + 4;
+  }
+}
+
+uint8_t veeprom_massErase(void){
 	uint8_t status = 0;
 	uint32_t tmp;
 	uint32_t ee_page = (uint32_t)(((LL_GetFlashSize() * 1024)/FLASH_PAGE_SIZE) - 1);
-	eeprom_unlock();
+	_eeprom_unlock();
 	status = _waitForLastOperation(FLASH_TIMEOUT_VALUE);
 	if(status == 0) { return 0; }
 	tmp = (FLASH->CR & ~FLASH_CR_PNB);
   FLASH->CR = (tmp | (FLASH_CR_STRT | (ee_page <<  FLASH_CR_PNB_Pos) | FLASH_CR_PER));
 	status = _waitForLastOperation(FLASH_TIMEOUT_VALUE);
 	CLEAR_BIT(FLASH->CR, FLASH_CR_PER);
-	eeprom_lock();
+	_eeprom_lock();
 	return status;
 }
 
-// uint8_t eeprom_writeByte(uint32_t address, uint8_t data)
-// {
-// 	uint8_t status;
-// 	address = DATA_EEPROM_BASE + address;
-// 	if (address > DATA_EEPROM_END)
-// 		return 0;
-// 	status = System_EE_waitForLastOperation(FLASH_TIMEOUT_VALUE);
-// 	if (status == 1)
-// 	{
-// 		*(__IO uint8_t *)address = (uint8_t)data; // Program byte (8-bit) at a specified address.
-// 		status = System_EE_waitForLastOperation(FLASH_TIMEOUT_VALUE);
-// 	}
-// 	return status;
-// }
+uint8_t eeprom_writeByte(uint16_t address, uint8_t data)
+{
+	_eedata[address] = (uint8_t)data;
+	return 1;
+}
 
-// uint8_t eeprom_writeHalfWord(uint32_t address, uint16_t data)
-// {
-// 	uint8_t status;
-// 	address = DATA_EEPROM_BASE + address;
-// 	if (address > DATA_EEPROM_END)
-// 		return 0;
-// 	status = System_EE_waitForLastOperation(FLASH_TIMEOUT_VALUE);
-// 	if (status == 1)
-// 	{
-// 		*(__IO uint16_t *)address = (uint16_t)data; // Program halfword (16-bit) at a specified address.
-// 		status = System_EE_waitForLastOperation(FLASH_TIMEOUT_VALUE);
-// 	}
-// 	return status;
-// }
+uint8_t eeprom_writeHalfWord(uint16_t address, uint16_t data)
+{
+	_eedata[address] = (uint8_t)data;
+	_eedata[address+1] = (uint8_t)(data >> 8U) ;
+	return 1;
+}
 
-// uint8_t eeprom_writeWord(uint32_t address, uint32_t data)
-// {
-// 	uint8_t status;
-// 	address = DATA_EEPROM_BASE + address;
-// 	if (address > DATA_EEPROM_END)
-// 		return 0;
-// 	status = System_EE_waitForLastOperation(FLASH_TIMEOUT_VALUE);
-// 	if (status == 1)
-// 	{
-// 		*(__IO uint32_t *)address = (uint32_t)data;
-// 		; // Program word (32-bit) at a specified address.
-// 		status = System_EE_waitForLastOperation(FLASH_TIMEOUT_VALUE);
-// 	}
-// 	return status;
-// }
+uint8_t eeprom_writeWord(uint16_t address, uint32_t data)
+{
+	_eedata[address] = (uint8_t)data;
+	_eedata[address+1] = (uint8_t)(data >> 8U) ;
+	_eedata[address+2] = (uint8_t)(data >> 16U) ;
+	_eedata[address+3] = (uint8_t)(data >> 24U) ;
+	return 1;
+}
 
-// uint8_t eeprom_writeFloat(uint32_t address, float *data)
-// {
-// 	uint8_t status;
-// 	uint32_t *p = (uint32_t *)data;
-// 	address = DATA_EEPROM_BASE + address;
-// 	if (address > DATA_EEPROM_END)
-// 		return 0;
-// 	status = System_EE_waitForLastOperation(FLASH_TIMEOUT_VALUE);
-// 	if (status == 1)
-// 	{
-// 		*(__IO uint32_t *)address = (uint32_t)*p;
-// 		; // Program word (32-bit) at a specified address.
-// 		status = System_EE_waitForLastOperation(FLASH_TIMEOUT_VALUE);
-// 	}
-// 	return status;
-// }
+uint8_t veeprom_writeFloat(uint16_t address, float *data)
+{
+	uint8_t *p = (uint8_t *)data;
+	for(uint8_t i = 0; i < 4; i++){
+		_eedata[address + i] = *p++;
+	}
+	return status;
+}
 
-// uint8_t eeprom_readByte(uint32_t address)
-// {
-// 	uint8_t r;
-// 	address = DATA_EEPROM_BASE + address;
-// 	r = *(__IO uint8_t *)address;
-// 	return r;
-// }
+uint8_t veeprom_readByte(uint16_t address)
+{
+	return (uint8_t)_eedata[address];
+}
 
-// uint16_t eeprom_readHalfWord(uint32_t address)
-// {
-// 	uint16_t r;
-// 	address = DATA_EEPROM_BASE + address;
-// 	r = *(__IO uint16_t *)address;
-// 	return r;
-// }
+uint16_t eeprom_readHalfWord(uint32_t address)
+{
+	uint16_t r;
+	r = _eedata[address];
+	r += ((uint16_t)_eedata[address+1] << 8);
+	return r;
+}
 
 uint32_t eeprom_readWord(uint32_t address)
 {
 	uint32_t r;
-	address = DATA_EEPROM_BASE + address;
-	r = *(__IO uint32_t *)address;
+	r = _eedata[address];
+	r += ((uint32_t)_eedata[address+1] << 8);
+	r += ((uint32_t)_eedata[address+2] << 16);
+	r += ((uint32_t)_eedata[address+3] << 24);
 	return r;
 }
 
-// void eeprom_readFloat(uint32_t address, float *rdata)
-// {
-// 	uint32_t *int_data = (uint32_t *)rdata;
-// 	address = DATA_EEPROM_BASE + address;
-// 	(*int_data) = *(__IO uint32_t *)address;
-// }
+void eeprom_readFloat(uint16_t address, float *rdata)
+{
+	uint8_t* p = rdata;
+	*p++ = _eedata[address];
+	*p++ = _eedata[address+1];
+	*p++ = _eedata[address+2];
+	*p++ = _eedata[address+3];
+}
+
+void eeprom_commit(void){
+	eedata_t d;
+	veeprom_massErase();
+	_eeprom_unlock();
+	for(uint16_t i = 0; i < DATA_EEPROM_SIZE; i+=8 ){
+		for(uint8_t j = 0; j < 8; j++){
+			d.u8[j] = _eedata[i+j];
+		}
+		_eeprom_writeDWord(i, d.u64);
+	}
+	_eeprom_lock();
+}

@@ -163,20 +163,17 @@ extern "C"
 	void system_standbySeconds(uint32_t seconds);
 	void system_standbyUntilWakeUpPin(uint32_t WAKEUP_PIN_x, uint8_t polarity); // This function doesn't required System_RTC_initLSI
 
-	/* System EEPROM Functions *********************************/
-	// OJO: PADDING = 4 bytes
-	void eeprom_unlock(void);
-	void eeprom_lock(void);
-	uint8_t eeprom_massErase(void);
-	uint8_t eeprom_writeByte(uint32_t address, uint8_t data);
-	uint8_t eeprom_writeHalfWord(uint32_t address, uint16_t data);
-	uint8_t eeprom_writeWord(uint32_t address, uint32_t data);
-	uint8_t eeprom_writeDWord(uint32_t address, uint64_t data);
-	uint8_t eeprom_writeFloat(uint32_t address, float *data);
-	uint8_t eeprom_readByte(uint32_t address);
-	uint16_t eeprom_readHalfWord(uint32_t address);
-	uint32_t eeprom_readWord(uint32_t address);
-	void eeprom_readFloat(uint32_t address, float *rdata);
+	/* Virtual EEPROM Functions *********************************/
+	void veeprom_init(void);
+	uint8_t veeprom_massErase(void);
+	uint8_t veeprom_writeByte(uint16_t address, uint8_t data);
+	uint8_t veeprom_writeHalfWord(uint16_t address, uint16_t data);
+	uint8_t veeprom_writeWord(uint16_t address, uint32_t data);
+	uint8_t veeprom_writeFloat(uint16_t address, float *data);
+	uint8_t veeprom_readByte(uint16_t address);
+	uint16_t veeprom_readHalfWord(uint16_t address);
+	uint32_t veeprom_readWord(uint16_t address);
+	void veeprom_readFloat(uint16_t address, float *rdata);
 
 #ifdef __cplusplus
 }
