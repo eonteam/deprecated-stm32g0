@@ -267,7 +267,7 @@ void eeprom_readFloat(uint16_t address, float *rdata)
 	*p++ = _eedata[address+3];
 }
 
-void eeprom_commit(void){
+void veeprom_commit(void){
 	eedata_t d;
 	veeprom_massErase();
 	_eeprom_unlock();

@@ -174,7 +174,7 @@ extern "C"
 	uint16_t veeprom_readHalfWord(uint16_t address);
 	uint32_t veeprom_readWord(uint16_t address);
 	void veeprom_readFloat(uint16_t address, float *rdata);
-	void eeprom_commit(void);
+	void veeprom_commit(void);
 
 #ifdef __cplusplus
 }
