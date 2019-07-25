@@ -204,20 +204,20 @@ uint8_t veeprom_massErase(void){
 	return status;
 }
 
-uint8_t eeprom_writeByte(uint16_t address, uint8_t data)
+uint8_t veeprom_writeByte(uint16_t address, uint8_t data)
 {
 	_eedata[address] = (uint8_t)data;
 	return 1;
 }
 
-uint8_t eeprom_writeHalfWord(uint16_t address, uint16_t data)
+uint8_t veeprom_writeHalfWord(uint16_t address, uint16_t data)
 {
 	_eedata[address] = (uint8_t)data;
 	_eedata[address+1] = (uint8_t)(data >> 8U) ;
 	return 1;
 }
 
-uint8_t eeprom_writeWord(uint16_t address, uint32_t data)
+uint8_t veeprom_writeWord(uint16_t address, uint32_t data)
 {
 	_eedata[address] = (uint8_t)data;
 	_eedata[address+1] = (uint8_t)(data >> 8U) ;
@@ -240,7 +240,7 @@ uint8_t veeprom_readByte(uint16_t address)
 	return (uint8_t)_eedata[address];
 }
 
-uint16_t eeprom_readHalfWord(uint32_t address)
+uint16_t veeprom_readHalfWord(uint32_t address)
 {
 	uint16_t r;
 	r = _eedata[address];
@@ -248,7 +248,7 @@ uint16_t eeprom_readHalfWord(uint32_t address)
 	return r;
 }
 
-uint32_t eeprom_readWord(uint32_t address)
+uint32_t veeprom_readWord(uint32_t address)
 {
 	uint32_t r;
 	r = _eedata[address];
@@ -258,7 +258,7 @@ uint32_t eeprom_readWord(uint32_t address)
 	return r;
 }
 
-void eeprom_readFloat(uint16_t address, float *rdata)
+void veeprom_readFloat(uint16_t address, float *rdata)
 {
 	uint8_t* p = (uint8_t*)rdata;
 	*p++ = _eedata[address];
