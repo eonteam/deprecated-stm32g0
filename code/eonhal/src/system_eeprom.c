@@ -191,10 +191,6 @@ void veeprom_init(void){
 	uint32_t address = DATA_EEPROM_BASE;
 	uint32_t endaddr = DATA_EEPROM_LIMIT;
 
-	for(index = 0; index < DATA_EEPROM_SIZE; index++){
-		_eedata[index] = 255;
-	}
-
 	while (address < endaddr)
   {
 		index = address - DATA_EEPROM_BASE;
