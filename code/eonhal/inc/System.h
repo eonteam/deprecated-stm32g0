@@ -146,9 +146,23 @@ extern "C"
 
 /* System Low Power Modes Functions **********************/
 // Definitions
+#if defined(PA0)
 #define WAKEUP_PIN_PA0 LL_PWR_WAKEUP_PIN1
+#endif
+#if defined(PC13)
 #define WAKEUP_PIN_PC13 LL_PWR_WAKEUP_PIN2
-#define WAKEUP_PIN_PA2 LL_PWR_WAKEUP_PIN3
+#elif defined(PA4)
+#define WAKEUP_PIN_PA4 LL_PWR_WAKEUP_PIN2
+#endif
+#if defined(PA2)
+#define WAKEUP_PIN_PA2 LL_PWR_WAKEUP_PIN4
+#endif
+#if defined(PC5)
+#define WAKEUP_PIN_PC5 LL_PWR_WAKEUP_PIN5
+#endif
+#if defined(PB5)
+#define WAKEUP_PIN_PB5 LL_PWR_WAKEUP_PIN6
+#endif
 	// Functions defined in "system_lowpower_l0.c"
 	void system_turnOffAllGPIOs(void);
 	// This functions required rtc_initLsi first
