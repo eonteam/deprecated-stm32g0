@@ -240,7 +240,7 @@ uint8_t veeprom_readByte(uint16_t address)
 	return (uint8_t)_eedata[address];
 }
 
-uint16_t veeprom_readHalfWord(uint32_t address)
+uint16_t veeprom_readHalfWord(uint16_t address)
 {
 	uint16_t r;
 	r = _eedata[address];
@@ -248,7 +248,7 @@ uint16_t veeprom_readHalfWord(uint32_t address)
 	return r;
 }
 
-uint32_t veeprom_readWord(uint32_t address)
+uint32_t veeprom_readWord(uint16_t address)
 {
 	uint32_t r;
 	r = _eedata[address];
