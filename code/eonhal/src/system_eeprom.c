@@ -232,7 +232,7 @@ uint8_t veeprom_writeFloat(uint16_t address, float *data)
 	for(uint8_t i = 0; i < 4; i++){
 		_eedata[address + i] = *p++;
 	}
-	return status;
+	return 1;
 }
 
 uint8_t veeprom_readByte(uint16_t address)
@@ -260,7 +260,7 @@ uint32_t eeprom_readWord(uint32_t address)
 
 void eeprom_readFloat(uint16_t address, float *rdata)
 {
-	uint8_t* p = rdata;
+	uint8_t* p = (uint8_t*)rdata;
 	*p++ = _eedata[address];
 	*p++ = _eedata[address+1];
 	*p++ = _eedata[address+2];
