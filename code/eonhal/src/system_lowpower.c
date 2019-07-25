@@ -282,6 +282,8 @@ void system_standbyUntilWakeUpPin(uint32_t WAKEUP_PIN_x, uint8_t polarity)
 	LL_PWR_DisableSRAMRetention();
 #endif
 	LL_RCC_DisableRTC();
+	LL_RCC_LSI_Disable();
+	LL_RCC_LSE_Disable();
 	LL_PWR_SetPowerMode(LL_PWR_MODE_STANDBY);
 	LL_LPM_EnableDeepSleep();
 #if defined(__CC_ARM)
@@ -354,6 +356,8 @@ void system_standbySRAMUntilWakeUpPin(uint32_t WAKEUP_PIN_x, uint8_t polarity)
 	LL_PWR_ClearFlag_WU();
 	LL_PWR_EnableSRAMRetention();
 	LL_RCC_DisableRTC();
+	LL_RCC_LSI_Disable();
+	LL_RCC_LSE_Disable();
 	LL_PWR_SetPowerMode(LL_PWR_MODE_STANDBY);
 	LL_LPM_EnableDeepSleep();
 #if defined(__CC_ARM)
@@ -425,6 +429,8 @@ void system_shutdownUntilWakeUpPin(uint32_t WAKEUP_PIN_x, uint8_t polarity)
 	LL_PWR_EnableWakeUpPin(WAKEUP_PIN_x);
 	LL_PWR_ClearFlag_WU();
 	LL_RCC_DisableRTC();
+	LL_RCC_LSI_Disable();
+	LL_RCC_LSE_Disable();
 	LL_PWR_SetPowerMode(LL_PWR_MODE_SHUTDOWN);
 	LL_LPM_EnableDeepSleep();
 #if defined(__CC_ARM)
