@@ -158,10 +158,23 @@ extern "C"
 	void system_sleepLPMillis(uint32_t milliseconds);
 	void system_stop0Seconds(uint32_t seconds);
 	void system_stop0Millis(uint32_t milliseconds);
-	void system_stop0UntilInterrupt(void); // This function doesn't required System_RTC_initLSI
+	void system_stop0UntilInterrupt(void); // This function doesn't required rtc
+	void system_stop1Seconds(uint32_t seconds);
+	void system_stop1Millis(uint32_t milliseconds);
+	void system_stop1UntilInterrupt(void); // This function doesn't required rtc
 	void system_standby(void);
 	void system_standbySeconds(uint32_t seconds);
-	void system_standbyUntilWakeUpPin(uint32_t WAKEUP_PIN_x, uint8_t polarity); // This function doesn't required System_RTC_initLSI
+	void system_standbyUntilWakeUpPin(uint32_t WAKEUP_PIN_x, uint8_t polarity); // This function doesn't required rtc
+#if defined(PWR_CR3_RRS)
+	void system_standbySRAM(void);
+	void system_standbySRAMSeconds(uint32_t seconds);
+	void system_standbySRAMUntilWakeUpPin(uint32_t WAKEUP_PIN_x, uint8_t polarity); // This function doesn't required rtc
+#endif
+#if defined(PWR_CR1_LPMS_2)
+	void system_shutdown(void);
+	void system_shutdownSeconds(void);
+	void system_shutdownUntilWakeUpPin(void);
+#endif
 
 	/* Virtual EEPROM Functions *********************************/
 	void veeprom_init(void);

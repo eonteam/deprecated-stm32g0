@@ -8,12 +8,6 @@
   ******************************************************************************
 */
 
-/** 
- ===============================================================================
-              ##### Dependencies #####
- ===============================================================================
- */
-
 #include "System.h"
 
 /** 
@@ -33,9 +27,13 @@ void clock_init(void (*clockFunc)(void))
 
 /** 
  ===============================================================================
-              ##### Funciones p�blicas #####
+              ##### Public functions #####
  ===============================================================================
  */
+
+// ==========================================
+// ==== Sleep Functions
+// ==========================================
 
 void system_sleepSeconds(uint32_t seconds)
 {
@@ -61,6 +59,10 @@ void system_sleepMillis(uint32_t milliseconds)
 	LL_SYSTICK_EnableIT();
 	rtc_setWKUPMillis(0); //disable rtc interrupt
 }
+
+// ==========================================
+// ==== Low power Sleep Functions
+// ==========================================
 
 void system_sleepLPSeconds(uint32_t seconds)
 {
@@ -113,6 +115,10 @@ void system_sleepLPMillis(uint32_t milliseconds)
 	rtc_setWKUPMillis(0);
 }
 
+// ==========================================
+// ==== Stop 0 Functions
+// ==========================================
+
 void system_stop0Seconds(uint32_t seconds)
 {
 	CLOCK_HSI_2MHZ();
@@ -155,7 +161,55 @@ void system_stop0UntilInterrupt(void)
 	cur_clock();
 }
 
-// TODO: stop mode 1
+// ==========================================
+// ==== Stop 1 Functions
+// ==========================================
+
+void system_stop1Seconds(uint32_t seconds)
+{
+	CLOCK_HSI_2MHZ();
+	__disable_irq();
+	LL_SYSTICK_DisableIT();
+	NVIC_EnableIRQ(RTC_TAMP_IRQn);
+	rtc_setAlarmBAfter(seconds);
+	LL_PWR_SetPowerMode(LL_PWR_MODE_STOP1);
+	LL_LPM_EnableDeepSleep();
+	__WFI();
+	LL_LPM_EnableSleep();
+	cur_clock();
+	__enable_irq();
+}
+
+void system_stop1Millis(uint32_t milliseconds)
+{
+	CLOCK_HSI_2MHZ();
+	__disable_irq();
+	LL_SYSTICK_DisableIT();
+	NVIC_EnableIRQ(RTC_TAMP_IRQn);
+	rtc_setWKUPMillis(milliseconds);
+	LL_PWR_SetPowerMode(LL_PWR_MODE_STOP1);
+	LL_LPM_EnableDeepSleep();
+	__WFI();
+	LL_LPM_EnableSleep();
+	cur_clock();
+	__enable_irq();
+	rtc_setWKUPMillis(0);
+}
+
+void system_stop1UntilInterrupt(void)
+{
+	CLOCK_HSI_2MHZ();
+	LL_SYSTICK_DisableIT();
+	LL_PWR_SetPowerMode(LL_PWR_MODE_STOP1);
+	LL_LPM_EnableDeepSleep();
+	__WFI();
+	LL_LPM_EnableSleep();
+	cur_clock();
+}
+
+// ==========================================
+// ==== Standby Functions
+// ==========================================
 
 void system_standby(void)
 {
@@ -165,6 +219,10 @@ void system_standby(void)
 	}
 	LL_SYSTICK_DisableIT();
 	LL_PWR_ClearFlag_WU();
+	LL_RCC_ClearResetFlags(); // TODO: is it necessary?
+#if defined(PWR_CR3_RRS)
+	LL_PWR_DisableSRAMRetention();
+#endif
 	LL_PWR_SetPowerMode(LL_PWR_MODE_STANDBY);
 	LL_LPM_EnableDeepSleep();
 #if defined(__CC_ARM)
@@ -182,8 +240,12 @@ void system_standbySeconds(uint32_t seconds)
 	__disable_irq();
 	LL_SYSTICK_DisableIT();
 	LL_PWR_ClearFlag_WU();
+	LL_RCC_ClearResetFlags(); // TODO: is it necessary?
 	NVIC_EnableIRQ(RTC_TAMP_IRQn);
 	rtc_setAlarmBAfter(seconds);
+#if defined(PWR_CR3_RRS)
+	LL_PWR_DisableSRAMRetention();
+#endif
 	LL_PWR_SetPowerMode(LL_PWR_MODE_STANDBY);
 	LL_LPM_EnableDeepSleep();
 #if defined(__CC_ARM)
@@ -191,7 +253,6 @@ void system_standbySeconds(uint32_t seconds)
 #endif
 	__WFI();
 }
-
 
 void system_standbyUntilWakeUpPin(uint32_t WAKEUP_PIN_x, uint8_t polarity)
 {
@@ -203,13 +264,20 @@ void system_standbyUntilWakeUpPin(uint32_t WAKEUP_PIN_x, uint8_t polarity)
 	LL_SYSTICK_DisableIT();
 	LL_PWR_DisableWakeUpPin(WAKEUP_PIN_x);
 	LL_PWR_ClearFlag_WU();
-	if(polarity){
+	LL_RCC_ClearResetFlags(); // TODO: is it necessary?
+	if (polarity)
+	{
 		LL_PWR_SetWakeUpPinPolarityHigh(WAKEUP_PIN_x);
-	}else{
+	}
+	else
+	{
 		LL_PWR_SetWakeUpPinPolarityLow(WAKEUP_PIN_x);
 	}
 	LL_PWR_EnableWakeUpPin(WAKEUP_PIN_x);
 	LL_PWR_ClearFlag_WU();
+#if defined(PWR_CR3_RRS)
+	LL_PWR_DisableSRAMRetention();
+#endif
 	LL_PWR_SetPowerMode(LL_PWR_MODE_STANDBY);
 	LL_LPM_EnableDeepSleep();
 #if defined(__CC_ARM)
@@ -218,8 +286,162 @@ void system_standbyUntilWakeUpPin(uint32_t WAKEUP_PIN_x, uint8_t polarity)
 	__WFI();
 }
 
+// ==========================================
+// ==== Standby SRAM Functions
+// ==========================================
+
+#if defined(PWR_CR3_RRS)
+void system_standbySRAM(void)
+{
+	if (LL_PWR_IsActiveFlag_SB() != 0)
+	{
+		LL_PWR_ClearFlag_SB();
+	}
+	LL_SYSTICK_DisableIT();
+	LL_PWR_ClearFlag_WU();
+	LL_RCC_ClearResetFlags(); // TODO: is it necessary?
+	LL_PWR_EnableSRAMRetention();
+	LL_PWR_SetPowerMode(LL_PWR_MODE_STANDBY);
+	LL_LPM_EnableDeepSleep();
+#if defined(__CC_ARM)
+	__force_stores();
+#endif
+	__WFI();
+}
+
+void system_standbySRAMSeconds(uint32_t seconds)
+{
+	if (LL_PWR_IsActiveFlag_SB() != 0)
+	{
+		LL_PWR_ClearFlag_SB();
+	}
+	__disable_irq();
+	LL_SYSTICK_DisableIT();
+	LL_PWR_ClearFlag_WU();
+	LL_RCC_ClearResetFlags(); // TODO: is it necessary?
+	NVIC_EnableIRQ(RTC_TAMP_IRQn);
+	rtc_setAlarmBAfter(seconds);
+	LL_PWR_EnableSRAMRetention();
+	LL_PWR_SetPowerMode(LL_PWR_MODE_STANDBY);
+	LL_LPM_EnableDeepSleep();
+#if defined(__CC_ARM)
+	__force_stores();
+#endif
+	__WFI();
+}
+
+void system_standbySRAMUntilWakeUpPin(uint32_t WAKEUP_PIN_x, uint8_t polarity)
+{
+	if (LL_PWR_IsActiveFlag_SB() != 0)
+	{
+		LL_PWR_ClearFlag_SB();
+	}
+	__disable_irq();
+	LL_SYSTICK_DisableIT();
+	LL_PWR_DisableWakeUpPin(WAKEUP_PIN_x);
+	LL_PWR_ClearFlag_WU();
+	LL_RCC_ClearResetFlags(); // TODO: is it necessary?
+	if (polarity)
+	{
+		LL_PWR_SetWakeUpPinPolarityHigh(WAKEUP_PIN_x);
+	}
+	else
+	{
+		LL_PWR_SetWakeUpPinPolarityLow(WAKEUP_PIN_x);
+	}
+	LL_PWR_EnableWakeUpPin(WAKEUP_PIN_x);
+	LL_PWR_ClearFlag_WU();
+	LL_PWR_EnableSRAMRetention();
+	LL_PWR_SetPowerMode(LL_PWR_MODE_STANDBY);
+	LL_LPM_EnableDeepSleep();
+#if defined(__CC_ARM)
+	__force_stores();
+#endif
+	__WFI();
+}
+#endif
+
+// ==========================================
+// ==== Shutdown Functions
+// ==========================================
+
+#if defined(PWR_CR1_LPMS_2)
+
+void system_shutdown(void)
+{
+	if (LL_PWR_IsActiveFlag_SB() != 0)
+	{
+		LL_PWR_ClearFlag_SB();
+	}
+	LL_SYSTICK_DisableIT();
+	LL_PWR_ClearFlag_WU();
+	LL_RCC_ClearResetFlags(); // TODO: is it necessary?
+	LL_PWR_SetPowerMode(LL_PWR_MODE_SHUTDOWN);
+	LL_LPM_EnableDeepSleep();
+#if defined(__CC_ARM)
+	__force_stores();
+#endif
+	__WFI();
+}
+
+void system_shutdownSeconds(uint32_t seconds)
+{
+	if (LL_PWR_IsActiveFlag_SB() != 0)
+	{
+		LL_PWR_ClearFlag_SB();
+	}
+	__disable_irq();
+	LL_SYSTICK_DisableIT();
+	LL_PWR_ClearFlag_WU();
+	LL_RCC_ClearResetFlags(); // TODO: is it necessary?
+	NVIC_EnableIRQ(RTC_TAMP_IRQn);
+	rtc_setAlarmBAfter(seconds);
+	LL_PWR_SetPowerMode(LL_PWR_MODE_SHUTDOWN);
+	LL_LPM_EnableDeepSleep();
+#if defined(__CC_ARM)
+	__force_stores();
+#endif
+	__WFI();
+}
+
+void system_shutdownUntilWakeUpPin(uint32_t WAKEUP_PIN_x, uint8_t polarity)
+{
+	if (LL_PWR_IsActiveFlag_SB() != 0)
+	{
+		LL_PWR_ClearFlag_SB();
+	}
+	__disable_irq();
+	LL_SYSTICK_DisableIT();
+	LL_PWR_DisableWakeUpPin(WAKEUP_PIN_x);
+	LL_PWR_ClearFlag_WU();
+	LL_RCC_ClearResetFlags(); // TODO: is it necessary?
+	if (polarity)
+	{
+		LL_PWR_SetWakeUpPinPolarityHigh(WAKEUP_PIN_x);
+	}
+	else
+	{
+		LL_PWR_SetWakeUpPinPolarityLow(WAKEUP_PIN_x);
+	}
+	LL_PWR_EnableWakeUpPin(WAKEUP_PIN_x);
+	LL_PWR_ClearFlag_WU();
+	LL_PWR_SetPowerMode(LL_PWR_MODE_SHUTDOWN);
+	LL_LPM_EnableDeepSleep();
+#if defined(__CC_ARM)
+	__force_stores();
+#endif
+	__WFI();
+}
+
+#endif
+
+// ==========================================
+// ==== Other Functions
+// ==========================================
+
 void system_turnOffAllGPIOs(void)
 {
+	LL_IOP_GRP1_EnableClock(LL_IOP_GRP1_PERIPH_ALL);
 #ifdef GPIOA
 	GPIOA->MODER = 0xFFFFFFFF;
 	GPIOA->OTYPER = 0x00000000;
@@ -265,4 +487,5 @@ void system_turnOffAllGPIOs(void)
 	GPIOF->BSRR = 0x00000000;
 	GPIOF->BRR = 0x00000000;
 #endif
+	LL_IOP_GRP1_DisableClock(LL_IOP_GRP1_PERIPH_ALL);
 }
