@@ -32,15 +32,15 @@
 
 #### Stop 0 Mode
 
-| Current | Freq |
-| :-----: | :--: |
-| 4.01 uA | @all |
-
-#### Stop 1 Mode
-
 | Current  | Freq |
 | :------: | :--: |
 | 104.1 uA | @all |
+
+#### Stop 1 Mode
+
+| Current | Freq |
+| :-----: | :--: |
+| 4.5 uA  | @all |
 
 #### Standby Mode
 
