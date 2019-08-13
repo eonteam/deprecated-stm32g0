@@ -84,6 +84,56 @@ extern "C"
 
 #endif
 
+// LQFP48 Package
+#if defined(STM32G070CB)
+#define PA0 0
+#define PA1 1
+#define PA2 2
+#define PA3 3
+#define PA4 4
+#define PA5 5
+#define PA6 6
+#define PA7 7
+#define PA8 8
+#define PA9 9
+#define PA10 10
+#define PA11 11
+#define PA12 12
+#define PA13 13
+#define PA15 14
+
+#define PB0 15
+#define PB1 16
+#define PB2 17
+#define PB3 18
+#define PB4 19
+#define PB5 20
+#define PB6 21
+#define PB7 22
+#define PB8 23
+#define PB9 24
+#define PB10 25
+#define PB11 26
+#define PB12 27
+#define PB13 28
+#define PB14 29
+#define PB15 30
+
+#define PC6 31
+#define PC7 32
+#define PC13 33
+#define PC14 34
+#define PC15 35
+
+#define PD0 36
+#define PD1 37
+#define PD2 38
+#define PD3 39
+
+#define PF0 40
+#define PF1 41
+#endif
+
 // LQF64 Package
 #if defined(STM32G070RB) || defined(STM32G071RB)
 // **** Pins
