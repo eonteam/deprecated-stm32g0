@@ -155,9 +155,9 @@ void tim_interrupt(TIM_TypeDef *TIMx, uint32_t prescaler, uint32_t period)
 
 	tim_irqn = tim_clkEnableAndGetIRQn(TIMx);
 
-	TIM_InitStruct.Prescaler = 0;
+	TIM_InitStruct.Prescaler = prescaler;
 	TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
-	TIM_InitStruct.Autoreload = 0;
+	TIM_InitStruct.Autoreload = period;
 	TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
 	TIM_InitStruct.RepetitionCounter = 0;
 	LL_TIM_Init(TIMx, &TIM_InitStruct);
