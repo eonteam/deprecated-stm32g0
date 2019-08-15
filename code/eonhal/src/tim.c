@@ -81,7 +81,11 @@ uint8_t tim_clkEnableAndGetIRQn(TIM_TypeDef *TIMx)
 	if (TIMx == TIM6)
 	{
 		LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM6);
+#if defined(STM32G071xx) || defined(STM32G081xx)
+		return TIM6_DAC_LPTIM1_IRQn;
+#else
 		return TIM6_IRQn;
+#endif
 	}
 #endif
 
@@ -89,7 +93,11 @@ uint8_t tim_clkEnableAndGetIRQn(TIM_TypeDef *TIMx)
 	if (TIMx == TIM7)
 	{
 		LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_TIM7);
+#if defined(STM32G071xx) || defined(STM32G081xx)
+		return TIM7_LPTIM2_IRQn;
+#else
 		return TIM7_IRQn;
+#endif
 	}
 #endif
 
