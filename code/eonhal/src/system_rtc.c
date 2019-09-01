@@ -276,6 +276,7 @@ void rtc_setAlarmA(uint8_t RTC_ALARM_TYPE_X, uint8_t day_weekday, uint8_t hours,
 	LL_RTC_ALMA_Disable(RTC);
 	LL_RTC_DisableIT_ALRA(RTC);
 	LL_RTC_ClearFlag_ALRA(RTC);
+	NVIC_ClearPendingIRQ(RTC_TAMP_IRQn);
 	LL_RTC_EnableWriteProtection(RTC);
 
 	NVIC_SetPriority(RTC_TAMP_IRQn, RTC_PRIORITY);
@@ -320,6 +321,7 @@ void rtc_setAlarmB(uint8_t RTC_ALARM_TYPE_X, uint8_t day_weekday, uint8_t hours,
 	LL_RTC_ALMB_Disable(RTC);
 	LL_RTC_DisableIT_ALRB(RTC);
 	LL_RTC_ClearFlag_ALRB(RTC);
+	NVIC_ClearPendingIRQ(RTC_TAMP_IRQn);
 	LL_RTC_EnableWriteProtection(RTC);
 
 	NVIC_SetPriority(RTC_TAMP_IRQn, RTC_PRIORITY);
