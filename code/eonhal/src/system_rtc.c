@@ -370,6 +370,7 @@ void rtc_setAlarmAAfter(uint32_t seconds)
 	LL_RTC_ALMA_Disable(RTC);
 	LL_RTC_DisableIT_ALRA(RTC);
 	LL_RTC_ClearFlag_ALRA(RTC);
+	NVIC_ClearPendingIRQ(RTC_TAMP_IRQn);
 	LL_RTC_EnableWriteProtection(RTC);
 
 	if (seconds == 0)
@@ -410,6 +411,7 @@ void rtc_setAlarmBAfter(uint32_t seconds)
 	LL_RTC_ALMB_Disable(RTC);
 	LL_RTC_DisableIT_ALRB(RTC);
 	LL_RTC_ClearFlag_ALRB(RTC);
+	NVIC_ClearPendingIRQ(RTC_TAMP_IRQn);
 	LL_RTC_EnableWriteProtection(RTC);
 
 	if (seconds == 0)
