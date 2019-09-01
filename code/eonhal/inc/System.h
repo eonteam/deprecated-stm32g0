@@ -52,6 +52,8 @@ extern "C"
 
 /* System RTC Functions **********************/
 //Definitions
+#define MIN_TO_SEC(__x__) ((__x__)*60)
+#define HOUR_TO_SEC(__x__) ((__x__)*60 * 60)
 #define RTC_MONDAY LL_RTC_WEEKDAY_MONDAY
 #define RTC_TUESDAY LL_RTC_WEEKDAY_TUESDAY
 #define RTC_WEDNESDAY LL_RTC_WEEKDAY_WEDNESDAY
