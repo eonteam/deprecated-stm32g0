@@ -39,3 +39,18 @@ long map(long x, long in_min, long in_max, long out_min, long out_max)
 {
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
+
+uint16_t makeHalfWord(uint8_t h, uint8_t l)
+{
+  return (h << 8) | l;
+}
+
+uint16_t lowHalfWord(uint32_t w)
+{
+  return (uint16_t)((w)&0xFFFF);
+}
+
+uint16_t highHalfWord(uint32_t w)
+{
+  return (uint16_t)((w) >> 16);
+}

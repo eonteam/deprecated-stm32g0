@@ -47,4 +47,29 @@ long random_num(long howsmall, long howbig);
  */
 long map(long x, long in_min, long in_max, long out_min, long out_max);
 
+/**
+ * @brief Make a half word from two bytes
+ * 
+ * @param {h} High byte
+ * @param {l} Low byte 
+ * @return {unsigned int} word
+ */
+uint16_t makeHalfWord(uint8_t h, uint8_t l);
+
+/**
+ * @brief Get the low half word of a word
+ * 
+ * @param {w} word 
+ * @return {uint16_t} low half word 
+ */
+uint16_t lowHalfWord(uint32_t w);
+
+/**
+ * @brief Get the high half word of a word
+ * 
+ * @param {w} word 
+ * @return {uint16_t} high half word 
+ */
+uint16_t highHalfWord(uint32_t w);
+
 #endif
