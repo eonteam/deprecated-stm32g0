@@ -19,13 +19,24 @@
 #if (defined(USART1) || defined(UART1))
 
 /**
- * @brief Initiatize the UART
+ * @brief Initialize the UART
  * 
  * @param {baudrate}  Usually 9600
  * @param {tx}  TX2_Pin 
  * @param {rx}  RX2_Pin
  */
 void uart1_init(uint32_t baudrate, pin_t tx, pin_t rx);
+
+/**
+ * @brief Initialize the UART
+ * 
+ * @param {baudrate}  Usually 9600
+ * @param {tx}  TX2_Pin 
+ * @param {rx}  RX2_Pin
+ * @param {de}  RS485_DE_Pin
+ * @param {de_polarity} HIGH or LOW
+ */
+void uart1_rs485_init(uint32_t baudrate, pin_t tx, pin_t rx, pin_t de, uint8_t de_polarity);
 
 /**
  * @brief Turn off the UART

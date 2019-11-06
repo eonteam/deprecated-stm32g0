@@ -75,6 +75,49 @@ void uart1_init(uint32_t baudrate, pin_t tx, pin_t rx)
 	LL_USART_EnableIT_RXNE(USART1);
 }
 
+void uart1_rs485_init(uint32_t baudrate, pin_t tx, pin_t rx, pin_t de, uint8_t de_polarity)
+{
+
+	LL_USART_InitTypeDef USART_InitStruct;
+	LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_USART1);
+
+	gpio_modeUART(tx);
+	gpio_modeUART(rx);
+	gpio_modeUART(de);
+
+	NVIC_SetPriority(USART1_IRQn, 0);
+	NVIC_EnableIRQ(USART1_IRQn);
+
+	USART_InitStruct.PrescalerValue = LL_USART_PRESCALER_DIV1;
+	USART_InitStruct.BaudRate = baudrate;
+	USART_InitStruct.DataWidth = LL_USART_DATAWIDTH_8B;
+	USART_InitStruct.StopBits = LL_USART_STOPBITS_1;
+	USART_InitStruct.Parity = LL_USART_PARITY_NONE;
+	USART_InitStruct.TransferDirection = LL_USART_DIRECTION_TX_RX;
+	USART_InitStruct.HardwareFlowControl = LL_USART_HWCONTROL_NONE;
+	USART_InitStruct.OverSampling = LL_USART_OVERSAMPLING_8;
+	LL_USART_Init(USART1, &USART_InitStruct);
+
+	LL_USART_SetTXFIFOThreshold(USART1, LL_USART_FIFOTHRESHOLD_1_8);
+	LL_USART_SetRXFIFOThreshold(USART1, LL_USART_FIFOTHRESHOLD_1_8);
+	LL_USART_DisableFIFO(USART1);
+
+	// USART RS485 DE Mode ENABLE
+	if (de_polarity == HIGH)
+		LL_USART_SetDESignalPolarity(USART1, LL_USART_DE_POLARITY_HIGH);
+	else
+		LL_USART_SetDESignalPolarity(USART1, LL_USART_DE_POLARITY_LOW);
+	LL_USART_SetDEAssertionTime(USART1, 30);
+	LL_USART_SetDEDeassertionTime(USART1, 30);
+	LL_USART_EnableDEMode(USART1);
+
+	LL_USART_ConfigAsyncMode(USART1);
+
+	LL_USART_Enable(USART1);
+
+	LL_USART_EnableIT_RXNE(USART1);
+}
+
 void uart1_off(void)
 {
 	LL_APB2_GRP1_DisableClock(LL_APB2_GRP1_PERIPH_USART1);
