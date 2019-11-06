@@ -282,6 +282,7 @@ extern "C"
 #ifdef PA12
 #define MOSI1_PA12 PA12
 #define SDA2_PA12 PA12
+#define RS485DE1_PA12 PA12
 #endif
 
 #ifdef PA15
@@ -299,6 +300,7 @@ extern "C"
 #ifdef PB1
 #define AN_PB1 PB1
 #define TIM3CH4_PB1 PB1
+#define RS485DE3_PB1 PB1
 #endif
 
 #ifdef PB2
@@ -310,6 +312,7 @@ extern "C"
 #ifdef PB3
 #define TIM1CH2_PB3 PB3
 #define SCK1_PB3 PB3
+#define RS485DE1_PB3 PB3
 #endif
 
 #ifdef PB4
@@ -377,6 +380,7 @@ extern "C"
 #define TIM15CH1_PB14 PB14
 #define MISO2_PB14 PB14
 #define SDA2_PB14 PB14
+#define RS485DE3_PB14 PB14
 #endif
 
 #ifdef PB15
@@ -447,12 +451,17 @@ extern "C"
 #define SCK2_PD1 PD1
 #endif
 
+#ifdef PD2
+#define RS485DE3_PD2 PD2
+#endif
+
 #ifdef PD3
 #define MISO2_PD3 PD3
 #endif
 
 #ifdef PD4
 #define MOSI2_PD4 PD4
+#define RS485DE2_PD4 PD4
 #endif
 
 #ifdef PD5
@@ -562,6 +571,7 @@ extern "C"
 #ifdef PA12
 #define MOSI1_PA12 PA12
 #define SDA2_PA12 PA12
+#define RS485DE1_PA12 PA12
 #endif
 
 #ifdef PA15
@@ -579,6 +589,7 @@ extern "C"
 #ifdef PB1
 #define AN_PB1 PB1
 #define TIM3CH4_PB1 PB1
+#define RS485DE3_PB1 PB1
 #endif
 
 #ifdef PB2
@@ -590,6 +601,7 @@ extern "C"
 #ifdef PB3
 #define TIM1CH2_PB3 PB3
 #define SCK1_PB3 PB3
+#define RS485DE1_PB3 PB3
 #endif
 
 #ifdef PB4
@@ -659,6 +671,7 @@ extern "C"
 #define TIM15CH1_PB14 PB14
 #define MISO2_PB14 PB14
 #define SDA2_PB14 PB14
+#define RS485DE3_PB14 PB14
 #endif
 
 #ifdef PB15
@@ -730,12 +743,17 @@ extern "C"
 #define SCK2_PD1 PD1
 #endif
 
+#ifdef PD2
+#define RS485DE3_PD2 PD2
+#endif
+
 #ifdef PD3
 #define MISO2_PD3 PD3
 #endif
 
 #ifdef PD4
 #define MOSI2_PD4 PD4
+#define RS485DE2_PD4 PD4
 #endif
 
 #ifdef PD5

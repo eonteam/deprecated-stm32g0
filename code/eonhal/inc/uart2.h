@@ -28,7 +28,7 @@
 void uart2_init(uint32_t baudrate, pin_t tx, pin_t rx);
 
 /**
- * @brief Initialize the UART
+ * @brief Initialize the UART for RS485 Half-Duplex driver
  * 
  * @param {baudrate}  Usually 9600
  * @param {tx}  TX2_Pin 
