@@ -4,9 +4,9 @@
     "type": "platform",
     "mcpu": "cortex-m0plus",
     "script": "stm32_m0plus",
-    "core": "eoncli/arm-cortex-m",
-    "compiler": "eoncli/arm-none-eabi",
-    "programmer": "eoncli/stcubeprog",
+    "core": "eonteam/arm-cortex-m",
+    "compiler": "eonteam/arm-none-eabi",
+    "programmer": "eonteam/stcubeprog",
     "modules": [
         "adc",
         "uart1",
