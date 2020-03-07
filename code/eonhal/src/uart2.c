@@ -242,9 +242,9 @@ void uart2_printlnNum(int64_t n, uint8_t isfloat)
  ===============================================================================
  */
 
-uint8_t uart2_available(void)
+uint16_t uart2_available(void)
 {
-	return ((uint8_t)(UART_BUFFER_SIZE + urb.head - urb.tail)) % UART_BUFFER_SIZE;
+	return ((uart_buffer_index_t)(UART_BUFFER_SIZE + urb.head - urb.tail)) % UART_BUFFER_SIZE;
 }
 
 int uart2_read(void)
@@ -256,7 +256,7 @@ int uart2_read(void)
 	else
 	{
 		uint8_t c = urb.buffer[urb.tail];
-		urb.tail = (uint8_t)(urb.tail + 1) % UART_BUFFER_SIZE;
+		urb.tail = (uart_buffer_index_t)(urb.tail + 1) % UART_BUFFER_SIZE;
 		return c;
 	}
 }

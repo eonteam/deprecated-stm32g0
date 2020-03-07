@@ -60,16 +60,25 @@
 #define UART_GET_FLAG(__UARTX__, __FLAG__)                                     \
   (((__UARTX__)->ISR & (__FLAG__)) == (__FLAG__))
 
+#ifndef UART_BUFFER_SIZE
 #define UART_BUFFER_SIZE 256
+#endif
+
+#if (UART_BUFFER_SIZE > 256)
+typedef uint16_t uart_buffer_index_t;
+#else
+typedef uint8_t uart_buffer_index_t;
+#endif
 
 typedef struct {
   uint8_t buffer[UART_BUFFER_SIZE];
-  volatile uint8_t head;
-  volatile uint8_t tail;
+  volatile uart_buffer_index_t head;
+  volatile uart_buffer_index_t tail;
 } UARTRingBuff_t;
 
 __STATIC_INLINE void uart_rb_insert(UARTRingBuff_t *rb, uint8_t b) {
-  uint8_t i = (uint8_t)(rb->head + 1) % UART_BUFFER_SIZE;
+  uart_buffer_index_t i =
+      (uart_buffer_index_t)(rb->head + 1) % UART_BUFFER_SIZE;
   if (i != rb->tail) {
     rb->buffer[rb->head] = b;
     rb->head = i;
